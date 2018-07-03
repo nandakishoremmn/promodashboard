@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.create', ['ngRoute'])
+angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/create', {
@@ -9,54 +9,13 @@ angular.module('myApp.create', ['ngRoute'])
         });
     }])
 
-    .controller('Create1Ctrl', function ($scope, $http, $timeout) {
-        $scope.offerTypes = [{
-                "val": '$',
-                "key": 'D',
-            },
-            {
-                "val": '$ off',
-                "key": 'V',
-            },
-            {
-                "val": '% off',
-                "key": 'P',
-            },
-        ];
-
-        $scope.appliedOn = [{
-                "val": 'Each',
-                "key": 'e',
-            },
-            {
-                "val": 'All',
-                "key": 'a',
-            },
-        ];
-
-        $scope.prereqTypes = [{
-                "val": 'Quantity',
-                "key": 'qty',
-            },
-            {
-                "val": 'Amount',
-                "key": 'amt',
-            },
-        ];
-
-        $scope.targetGroups = [{
-                "val": 'Same as Prerequisite or another group',
-                "key": 'same',
-            },
-            {
-                "val": 'Target count (upto or exact quantity?)',
-                "key": 'count',
-            },
-            {
-                "val": 'Offer amount/percentage',
-                "key": 'offer',
-            },
-        ];
+    .controller('Create1Ctrl', ['$scope', '$http', '$timeout', 'api', function ($scope, $http, $timeout, api) {
+        var staticData = $http.get('/static/data.json').then((resp) => {
+            $scope.offerTypes = resp.data.offerTypes;
+            $scope.appliedOn = resp.data.appliedOn;
+            $scope.prereqTypes = resp.data.prereqTypes;
+            $scope.targetGroups = resp.data.targetGroups;
+        });
 
         $scope.groups = [{
                 "groupId": '10517844464A',
@@ -95,12 +54,11 @@ angular.module('myApp.create', ['ngRoute'])
         // ############################################################
         // ###############           Functions          ###############
         // ############################################################
-        
+
         $scope.getSummaryText = group => {
             var maxlength = 40;
             var itemlist = group.items.map(item => item.productName).toString();
-            if (itemlist == '') return "<No Items>";
-            return (itemlist.length > maxlength ? itemlist.substring(0, maxlength) + '...' : itemlist);
+            return (itemlist == '' ? "<No Items>" : (itemlist.length > maxlength ? itemlist.substring(0, maxlength) + '...' : itemlist))
         }
 
         $scope.setQty = () => {
@@ -114,18 +72,16 @@ angular.module('myApp.create', ['ngRoute'])
         }
 
         $scope.loadGroupItems = groupIndex => {
-            $scope.groupitems = ($scope.groups.length > 0 && groupIndex > -1? $scope.groups[groupIndex].items : [])
+            $scope.groupitems = ($scope.groups.length > 0 && groupIndex > -1 ? $scope.groups[groupIndex].items : [])
         }
 
         $scope.createGroup = () => {
-            $scope.groups.push(
-                {
-                    "groupId": $scope.roleID + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
-                    "quantity": 1,
-                    "items": [],
-                }
-            );
-            $scope.lastGpByLength = ($scope.lastGpByLength < $scope.groups.length ? $scope.groups.length : $scope.lastGpByLength)
+            $scope.groups.push({
+                "groupId": $scope.roleID + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
+                "quantity": 1,
+                "items": [],
+            });
+            $scope.lastGpByLength = ($scope.lastGpByLength++ < $scope.groups.length ? $scope.groups.length : ($scope.groups.length == 0 ? 0 : $scope.lastGpByLength))
         }
 
         $scope.deleteGroup = () => {
@@ -143,22 +99,15 @@ angular.module('myApp.create', ['ngRoute'])
 
         $scope.fetchSearchItems = () => {
             if ($scope.searchterm != '') {
-
                 if (searchTimeOut) $timeout.cancel(searchTimeOut);
+                $scope.searchingInProgress = true;
                 searchTimeOut = $timeout(() => {
-
-                    $scope.searchingInProgress = true;
-                    $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/14/products/search?q=' + $scope.searchterm).then((resp) => {
+                    api.search($scope.searchterm).then((data) => {
                         $scope.searchingInProgress = false;
-                        console.log(resp);
-                        if (resp.status = 200) {
-                            $scope.searchRes = resp.data;
-                        }
+                        $scope.searchRes = data;
                     });
 
-
                 }, 100);
-
             } else $scope.searchRes = [];
         }
-    });
+    }]);

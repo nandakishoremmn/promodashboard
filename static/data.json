@@ -1,0 +1,49 @@
+{
+    "offerTypes": [{
+            "key": "D",
+            "val": "$"
+        },
+        {
+            "key": "V",
+            "val": "$ off"
+        },
+        {
+            "key": "P",
+            "val": "% off"
+        }
+    ],
+
+    "appliedOn": [{
+            "key": "e",
+            "val": "Each"
+        },
+        {
+            "key": "a",
+            "val": "All"
+        }
+    ],
+
+    "prereqTypes": [{
+            "key": "qty",
+            "val": "Quantity"
+        },
+        {
+            "key": "amt",
+            "val": "Amount"
+        }
+    ],
+
+    "targetGroups": [{
+            "key": "same",
+            "val": "Same as Prerequisite or another group"
+        },
+        {
+            "key": "count",
+            "val": "Target count (upto or exact quantity?)"
+        },
+        {
+            "key": "offer",
+            "val": "Offer amount/percentage"
+        }
+    ]
+}

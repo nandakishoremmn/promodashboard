@@ -53,7 +53,7 @@
                         <div class="list-group searchresults">
                             <a href="" class="list-group-item list-group-item-action" ng-repeat="(groupIndex, group) in groups track by $index" ng-class="{'active': groupIndex == currGroupIndex}"
                                 ng-click="setGroup(groupIndex)">
-                                <span class="badge badge-secondary">{{group.groupId}} </span> {{getSummaryText(group)}}
+                                <span class="badge badge-secondary">{{group.groupId}} </span> {{getSummaryText(group)}} <span class="badge badge-success badge-pill float-right">{{group.quantity}}</span>
                             </a>
                         </div>
                         <br>
