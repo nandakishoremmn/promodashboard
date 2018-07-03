@@ -9,7 +9,7 @@ angular.module('myApp.create', ['ngRoute'])
         });
     }])
 
-    .controller('Create1Ctrl', function ($scope) {
+    .controller('Create1Ctrl', function ($scope, $http, $timeout) {
         $scope.offerTypes = [{
                 "val": '$',
                 "key": 'D',
@@ -58,20 +58,6 @@ angular.module('myApp.create', ['ngRoute'])
             },
         ];
 
-        $scope.searchRes = [{
-                "productName": 'First Result',
-                "sku": 'res1',
-            },
-            {
-                "productName": 'Another Result',
-                "sku": 'res2',
-            },
-            {
-                "productName": 'Final Result',
-                "sku": 'res3',
-            },
-        ]
-
         $scope.groups = [{
                 "groupId": '10517844464A',
                 "quantity": '2',
@@ -94,26 +80,74 @@ angular.module('myApp.create', ['ngRoute'])
                 }],
             },
         ];
-        $scope.currGroupID = 0;
+        $scope.roleID = '10517844464';
+        $scope.currGroupIndex = 0;
+        $scope.summaryText = "";
         $scope.groupitems = [];
+        $scope.searchterm = "";
+        $scope.searchRes = []
+        $scope.searchingInProgress = false;
+
+        var searchTimeOut;
+
+        // ##############################
+        // #####      Functions     #####
+        // ##############################
         
-        // Functions
+
+        $scope.getSummaryText = group => {
+            var maxlength = 40;
+            var itemlist = group.items.map(item => item.productName).toString();
+            if (itemlist == '') return "<No Items>";
+            return (itemlist.length > maxlength ? itemlist.substring(0, maxlength) + '...' : itemlist);
+        }
+
         $scope.setGroup = groupIndex => {
-            $scope.currGroup = groupIndex;
-            console.log($scope.currGroup + ' loaded');
+            $scope.currGroupIndex = groupIndex;
             $scope.loadGroupItems(groupIndex);
         }
 
         $scope.loadGroupItems = groupIndex => {
-            // $scope.CurrGroup = $scope.groups.filter((gp) => gp.groupId == gpID);
-            $scope.CurrGroup = $scope.groups[groupIndex];
-            $scope.groupitems = $scope.CurrGroup.items;
+            $scope.groupitems = ($scope.groups.length > 0 && groupIndex > -1? $scope.groups[groupIndex].items : [])
+        }
 
+        $scope.createGroup = () => {
+            $scope.groups.push(
+                {
+                    "groupId": $scope.roleID + String.fromCharCode('a'.charCodeAt() + $scope.groups.length),
+                    "quantity": 1,
+                    "items": [],
+                }
+            )
+        }
+
+        $scope.deleteGroup = () => {
+            $scope.groups.splice($scope.currGroupIndex--, 1);
+            $scope.loadGroupItems($scope.currGroupIndex);
         }
 
         $scope.deleteItem = itemIndex => {
-            $scope.groups[$scope.currGroupID].items.splice(itemIndex, 1);
+            $scope.groups[$scope.currGroupIndex].items.splice(itemIndex, 1);
         }
 
+        $scope.fetchSearchItems = () => {
+            if ($scope.searchterm != '') {
 
+                if (searchTimeOut) $timeout.cancel(searchTimeOut);
+                searchTimeOut = $timeout(() => {
+
+                    $scope.searchingInProgress = true;
+                    $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/14/products/search?q=' + $scope.searchterm).then((resp) => {
+                        $scope.searchingInProgress = false;
+                        console.log(resp);
+                        if (resp.status = 200) {
+                            $scope.searchRes = resp.data;
+                        }
+                    });
+
+
+                }, 100);
+
+            } else $scope.searchRes = [];
+        }
     });

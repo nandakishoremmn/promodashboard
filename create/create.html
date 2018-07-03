@@ -49,35 +49,40 @@
 
                 <div class="card bg-light">
                     <div class="card-body">
-                        <h3 class="center">Create Group</h3>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Enter Group Name">
-                            <div class="input-group-append">
-                                <button class="btn btn-success" type="submit">Create</button>
-                            </div>
-                        </div>
+                        <h4 class="center">Groups</h4>
                         <div class="list-group searchresults">
-                            <a 
-                            ng-repeat="(groupIndex, group) in groups" 
-                            ng-class="{'active': group.groupId == currGroup}"
-                            ng-click="setGroup(groupIndex)"
-                            href=""
-                            class="list-group-item list-group-item-action">{{group.groupId}} | </a>
+                            <a href="" class="list-group-item list-group-item-action"
+                                ng-repeat="(groupIndex, group) in groups" 
+                                ng-class="{'active': groupIndex == currGroupIndex}" 
+                                ng-click="setGroup(groupIndex)">{{group.groupId}} | {{getSummaryText(group)}}
+                            </a>
+                        </div>
+                        <br>
+                        <div class="btn-group float-right">
+                            <button class="btn btn-success" ng-click="createGroup()">Create</button>
+                            <button class="btn btn-danger" ng-disabled="currGroupIndex < 0" ng-click="deleteGroup()">Delete</button>
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="card bg-light">
                     <div class="card-body">
-                        <h3 class="center">Add items</h3>
+                        <h4 class="center">Add items</h4>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search">
+                            <input type="text" class="form-control" placeholder="Search" ng-model="searchterm" ng-change="fetchSearchItems()">
                             <div class="input-group-append">
-                                <button class="btn btn-outline" type="submit">Search</button>
+                                <button class="btn btn-dark btn-sm" type="submit" ng-show="searchingInProgress" disabled>Loading</button>
                             </div>
                         </div>
                         <div class="list-group searchresults">
-                            <a href="#" ng-repeat="res in searchRes" class="list-group-item list-group-item-action">{{res.val}}</a>
+                            <a href="" data-toggle="tooltip" title="Click To Add"  class="list-group-item list-group-item-action"
+                                ng-repeat="item in searchRes"
+                                ng-click="addItem(itemIndex)">
+                                <span class="badge badge-secondary">{{item.sku}}</span>
+                                {{item.productName}}
+                                </li>
+
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -90,11 +95,12 @@
                     <div class="card-body">
                         <h3 class="center">Group Items</h3>
                         <ul class="list-group searchresults">
-                            <li href="" ng-show="groupitems.length < 1" class="list-group-item disabled">No Items</li>
-                            <li href="" ng-repeat="(itemIndex, item) in groupitems" class="list-group-item list-group-item-action">
+                            <li ng-show="groupitems.length < 1" class="list-group-item disabled">No Items</li>
+                            <li ng-repeat="(itemIndex, item) in groupitems" class="list-group-item list-group-item-action">
                                 <span class="badge badge-secondary">{{item.sku}}</span>
                                 {{item.productName}}
-                                <button type="button" class="btn text-right float-right btn-sm btn-danger" ng-click="deleteItem(itemIndex)">Delete</button></li>
+                                <button type="button" class="btn text-right float-right btn-sm btn-danger" ng-click="deleteItem(itemIndex)">Delete</button>
+                            </li>
                         </ul>
                     </div>
                 </div>
