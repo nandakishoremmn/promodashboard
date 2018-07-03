@@ -10,46 +10,37 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
     }])
 
     .controller('Create1Ctrl', ['$scope', '$http', '$timeout', 'api', function ($scope, $http, $timeout, api) {
-        var staticData = $http.get('/static/data.json').then((resp) => {
-            $scope.offerTypes = resp.data.offerTypes;
-            $scope.appliedOn = resp.data.appliedOn;
-            $scope.prereqTypes = resp.data.prereqTypes;
-            $scope.targetGroups = resp.data.targetGroups;
+
+        // Load Options
+        api.fetchOptions().then((data) => {
+            // $scope.targetGroups = data.targetGroups;
+            $scope.offerTypesOptions = data.offerTypesOptions;
+            $scope.appliedOnOptions = data.appliedOnOptions;
+            $scope.prereqTypeOptions = data.prereqTypeOptions;
+            $scope.normTypeOptions = data.normTypeOptions;
         });
 
-        $scope.groups = [{
-                "groupId": '10517844464A',
-                "quantity": '2',
-                "items": [{
-                        "productName": "Bucket 16 Ltr",
-                        "sku": "100000616"
-                    },
-                    {
-                        "productName": "Gebi Garbage Bag Small 30 Pc 1",
-                        "sku": "100000613"
-                    },
-                ],
-            },
-            {
-                "groupId": '10517844464b',
-                "quantity": '3',
-                "items": [{
-                    "productName": "Silver House Tope 22 G 28 Cm 1",
-                    "sku": "100000636"
-                }],
-            },
-        ];
-        $scope.roleID = '10517844464';
-        $scope.currGroupIndex = 0;
-        $scope.gpqty = parseInt($scope.groups[$scope.currGroupIndex].quantity);
-        $scope.lastGpByLength = $scope.groups.length;
-        $scope.summaryText = "";
-        $scope.groupitems = [];
-        $scope.searchterm = "";
-        $scope.searchRes = []
-        $scope.searchingInProgress = false;
-        var searchTimeOut;
+        // Load Data and initialize
+        api.fetchData().then((data) => {
+            console.log(data);
+            $scope.selectedOfferType = data.type;
+            $scope.selectedAppliedOn = data.appliedOn;
+            $scope.selectedPrereqType = data.preRequisiteType;
+            $scope.selectedNormType = {};
+            $scope.groups = data.preRequisites;
 
+            $scope.roleID = '10517844464';
+            $scope.currGroupIndex = -1;
+            $scope.gpqty = ($scope.currGroupIndex == -1 ? 0 : parseInt($scope.groups[$scope.currGroupIndex].quantity));
+            $scope.lastGpByLength = $scope.groups.length;
+            $scope.summaryText = "";
+            $scope.groupitems = [];
+            $scope.searchterm = "";
+            $scope.searchRes = []
+            $scope.searchingInProgress = false;
+                
+        });
+            var searchTimeOut;
 
         // ############################################################
         // ###############           Functions          ###############
@@ -90,7 +81,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
         }
 
         $scope.addItem = itemIndex => {
-            $scope.groups[$scope.currGroupIndex].items.push($scope.searchRes[itemIndex]);
+            $scope.currGroupIndex != -1 && $scope.groups[$scope.currGroupIndex].items.push($scope.searchRes[itemIndex]);
         }
 
         $scope.deleteItem = itemIndex => {

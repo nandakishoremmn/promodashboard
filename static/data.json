@@ -1,49 +1,45 @@
 {
-    "offerTypes": [{
-            "key": "D",
-            "val": "$"
+    "offerTypesOptions": [{
+            "value": "$off",
+            "label": "Rupees off"
         },
         {
-            "key": "V",
-            "val": "$ off"
+            "value": "$",
+            "label": "Rupees"
         },
         {
-            "key": "P",
-            "val": "% off"
+            "value": "%off",
+            "label": "% off"
         }
     ],
 
-    "appliedOn": [{
-            "key": "e",
-            "val": "Each"
+    "appliedOnOptions": [{
+            "value": "Each",
+            "label": "Apply on Each Item"
         },
         {
-            "key": "a",
-            "val": "All"
+            "value": "All",
+            "label": "Prorate Across All Items"
         }
     ],
 
-    "prereqTypes": [{
-            "key": "qty",
-            "val": "Quantity"
+    "prereqTypeOptions": [{
+            "value": "N",
+            "label": "Quantity Based"
         },
         {
-            "key": "amt",
-            "val": "Amount"
+            "value": "$N",
+            "label": "Amount based"
         }
     ],
 
-    "targetGroups": [{
-            "key": "same",
-            "val": "Same as Prerequisite or another group"
+    "normTypeOptions": [{
+            "value": "normal",
+            "label": "Normal"
         },
         {
-            "key": "count",
-            "val": "Target count (upto or exact quantity?)"
-        },
-        {
-            "key": "offer",
-            "val": "Offer amount/percentage"
+            "value": "normore",
+            "label": "NorMore"
         }
     ]
 }

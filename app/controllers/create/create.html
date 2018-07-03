@@ -17,31 +17,39 @@
 
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Offer Type:</label>
-                <select class="form-control" id="offerType">
-                    <option ng-repeat="offerType in offerTypes">{{offerType.val}}</option>
+                <select class="form-control" id="offerType" ng-options="offerType.value as offerType.label for offerType in offerTypesOptions" ng-model="selectedOfferType">
+                    <!-- <option ng-repeat="offerType in offerTypesOptions" ng-selected="selectedOfferType.value==offerType.value" value="{{offerType.value}}">{{offerType.label}}</option> -->
                 </select>
             </div>
 
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Applied On:</label>
-                <select class="form-control" id="appliedOn">
-                    <option ng-repeat="on in appliedOn">{{on.val}}</option>
+                <select class="form-control" id="appliedOn" ng-options="on.value as on.label for on in appliedOnOptions" ng-model="selectedAppliedOn">
+                    <!-- <option ng-repeat="on in appliedOnOptions" ng-selected="selectedAppliedOn.value==on.value" value="{{on.value}}">{{on.label}}</option> -->
                 </select>
             </div>
 
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Prerequisite Type:</label>
-                <select class="form-control" id="prereqType">
-                    <option ng-repeat="prereqType in prereqTypes">{{prereqType.val}}</option>
+                <select class="form-control" id="prereqType" ng-options="prereqType.value as prereqType.label for prereqType in prereqTypeOptions" ng-model="selectedPrereqType">
+                    <!-- <option ng-repeat="prereqType in prereqTypeOptions" ng-selected="selectedPrereqType.value==prereqType.value" value="{{prereqType.value}}">{{prereqType.label}}</option> -->
                 </select>
             </div>
 
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="offerType">Target:</label>
-                <select class="form-control" id="targetGroups">
-                    <option ng-repeat="targetGroup in targetGroups">{{targetGroup.val}}</option>
+                <label for="offerType">Norm Type:</label>
+                <select class="form-control" id="normType" ng-options="normType.value as normType.label for normType in normTypeOptions" ng-model="selectedNormType">
+                    <!-- <option ng-repeat="normType in normTypeOptions" value="{{normType.value}}">{{normType.label}}</option> -->
                 </select>
             </div>
+
+            <!-- <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                <label for="offerType">Target:</label>
+                <select class="form-control" id="targetGroups">
+                    <option ng-repeat="targetGroup in targetGroups">{{targetGroup.value}}</option>
+                </select>
+            </div> -->
+
         </div>
         <hr>
         <div class="row">
