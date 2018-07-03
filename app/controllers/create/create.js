@@ -21,6 +21,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             >offer app logic
             ?
         */
+        // Todo: breadcrumb notifs
         // Load Options
         api.fetchOptions().then((data) => {
             // $scope.targetGroups = data.targetGroups;
@@ -52,7 +53,8 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
 
             $scope.groups = data.preRequisites;
 
-            $scope.roleID = '10517844464';
+            $scope.ruleID = Math.random().toString(10).substring(11);
+            // $scope.ruleID = '10517844464' + 1;
             $scope.currGroupIndex = -1;
             $scope.gpqty = ($scope.currGroupIndex == -1 ? 0 : parseInt($scope.groups[$scope.currGroupIndex].quantity));
             $scope.lastGpByLength = $scope.groups.length;
@@ -63,6 +65,30 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             $scope.searchingInProgress = false;
 
         });
+
+        $scope.savedata = () => {
+            // $scope.startDate = new Date(data.startDate);
+            // $scope.endDate = new Date(data.endDate);
+            var data = $scope.initialData;
+            data.type = $scope.selectedOfferType;
+            data.appliedOn = $scope.selectedAppliedOn;
+            data.preRequisiteType = $scope.selectedPrereqType;
+            // $scope.selectedNormType = {};
+            // $scope.selectedTargetGroup = {};
+
+            // $scope.targetID = data.targetIdCount.split(',')[0];
+            // $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
+
+            data.offerValue = $scope.offerValue;
+            data.offerCode = $scope.activationCode;
+            data.maxApplicationLimit = $scope.maxApplicationLimit;
+            data.preRequisites = $scope.groups;
+            data.ruleID = $scope.ruleID;
+            api.save(data).then((res) => {
+                console.log(res);
+            })
+        }
+
         var searchTimeOut;
 
         // ############################################################
@@ -91,7 +117,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
 
         $scope.createGroup = () => {
             $scope.groups.push({
-                "groupId": $scope.roleID + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
+                "groupId": $scope.ruleID + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
                 "quantity": 1,
                 "items": [],
             });
