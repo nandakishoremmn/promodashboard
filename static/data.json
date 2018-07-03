@@ -41,5 +41,15 @@
             "value": "normore",
             "label": "NorMore"
         }
+    ],
+
+    "targetGroupOptions": [{
+            "value": "same",
+            "label": "Same as Prerequisite group"
+        },
+        {
+            "value": "another",
+            "label": "Another group"
+        }
     ]
 }

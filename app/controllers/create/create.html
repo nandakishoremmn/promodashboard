@@ -7,61 +7,108 @@
 
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="startdate">Start Date:</label>
-                <input type="date" name="startdate" class="form-control" value="">
+                <input type="date" name="startdate" class="form-control" ng-model="startDate">
+                <p class="small text-muted text-center">Will start at the midnight of the selected date.</p>
             </div>
-
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="enddate">End Date:</label>
-                <input type="date" name="enddate" class="form-control" value="">
+                <input type="date" name="enddate" class="form-control" ng-model="endDate">
+                <p class="small text-muted text-center">Will end on the midnight of the previous date.</p>
             </div>
-
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Offer Type:</label>
-                <select class="form-control" id="offerType" ng-options="offerType.value as offerType.label for offerType in offerTypesOptions" ng-model="selectedOfferType">
-                    <!-- <option ng-repeat="offerType in offerTypesOptions" ng-selected="selectedOfferType.value==offerType.value" value="{{offerType.value}}">{{offerType.label}}</option> -->
+                <select class="form-control" id="offerType" ng-options="offerType.value as offerType.label for offerType in offerTypesOptions"
+                    ng-model="selectedOfferType">
                 </select>
             </div>
-
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Applied On:</label>
                 <select class="form-control" id="appliedOn" ng-options="on.value as on.label for on in appliedOnOptions" ng-model="selectedAppliedOn">
-                    <!-- <option ng-repeat="on in appliedOnOptions" ng-selected="selectedAppliedOn.value==on.value" value="{{on.value}}">{{on.label}}</option> -->
                 </select>
             </div>
-
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Prerequisite Type:</label>
-                <select class="form-control" id="prereqType" ng-options="prereqType.value as prereqType.label for prereqType in prereqTypeOptions" ng-model="selectedPrereqType">
-                    <!-- <option ng-repeat="prereqType in prereqTypeOptions" ng-selected="selectedPrereqType.value==prereqType.value" value="{{prereqType.value}}">{{prereqType.label}}</option> -->
+                <select class="form-control" id="prereqType" ng-options="prereqType.value as prereqType.label for prereqType in prereqTypeOptions"
+                    ng-model="selectedPrereqType">
                 </select>
             </div>
-
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Norm Type:</label>
-                <select class="form-control" id="normType" ng-options="normType.value as normType.label for normType in normTypeOptions" ng-model="selectedNormType">
-                    <!-- <option ng-repeat="normType in normTypeOptions" value="{{normType.value}}">{{normType.label}}</option> -->
+                <select class="form-control" id="normType" ng-options="normType.value as normType.label for normType in normTypeOptions"
+                    ng-model="selectedNormType">
                 </select>
             </div>
 
-            <!-- <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="offerType">Target:</label>
-                <select class="form-control" id="targetGroups">
-                    <option ng-repeat="targetGroup in targetGroups">{{targetGroup.value}}</option>
-                </select>
-            </div> -->
+            <hr>
 
+            <div class="form-group col-sm-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h4 class="center">Target</h4>
+                        <div class="row">
+
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label>Target Group:</label>
+                                <select class="form-control" id="targetGroups" ng-options="targetGroup.value as targetGroup.label for targetGroup in targetGroupOptions"
+                                    ng-model="selectedTargetGroup">
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label>Target Count:</label>
+                                <input type="number" name="targetCount" class="form-control" min="0" ng-model="targetCount">
+                                <div class="form-group form-check">
+                                    <label class="form-check-label text-muted">
+                                        <input disabled class="form-check-input" type="checkbox" ng-model="exactOrUpto" placeholder=""> {{exactOrUpto?'Exact':'Upto'}}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label>Offer Amount:</label>
+                                <input type="number" name="offerValue" class="form-control" min="0" ng-model="offerValue">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <hr>
+
         <div class="row">
             <div class="col-sm-12 col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h4 class="center">Add items</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Search" ng-model="searchterm" ng-change="fetchSearchItems()">
+                            <div class="input-group-append">
+                                <button class="btn btn-dark btn-sm" type="submit" ng-show="searchingInProgress" disabled>Loading</button>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-center" ng-hide="searchRes.length == 0">Click on item to add.</p>
+                        <div class="list-group searchresults">
+                            <a href="" data-toggle="tooltip" title="Click To Add" class="list-group-item list-group-item-action" ng-repeat="(itemIndex, item) in searchRes track by $index"
+                                ng-click="addItem(itemIndex)">
+                                <span class="badge badge-secondary">{{item.sku}}</span>
+                                {{item.productName}}
+                                </li>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
 
+            <div class="col-sm-12 col-md-6">
                 <div class="card bg-light">
                     <div class="card-body">
                         <h4 class="center">Groups</h4>
-                        <div class="list-group searchresults">
+                        <div class="list-group grouplists">
                             <a href="" class="list-group-item list-group-item-action" ng-repeat="(groupIndex, group) in groups track by $index" ng-class="{'active': groupIndex == currGroupIndex}"
                                 ng-click="setGroup(groupIndex)">
-                                <span class="badge badge-secondary">{{group.groupId}} </span> {{getSummaryText(group)}} <span class="badge badge-success badge-pill float-right">{{group.quantity}}</span>
+                                <span class="badge badge-secondary">{{group.groupId}} </span> {{getSummaryText(group)}}
+                                <span class="badge badge-success badge-pill float-right">{{group.quantity}}</span>
                             </a>
                         </div>
                         <br>
@@ -80,37 +127,8 @@
                 <hr>
                 <div class="card bg-light">
                     <div class="card-body">
-                        <h4 class="center">Add items</h4>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search" ng-model="searchterm" ng-change="fetchSearchItems()">
-                            <div class="input-group-append">
-                                <button class="btn btn-dark btn-sm" type="submit" ng-show="searchingInProgress" disabled>Loading</button>
-                            </div>
-                        </div>
-                        <div class="list-group searchresults">
-                            <a href="" data-toggle="tooltip" title="Click To Add" class="list-group-item list-group-item-action" ng-repeat="(itemIndex, item) in searchRes track by $index"
-                                ng-click="addItem(itemIndex)">
-                                <span class="badge badge-secondary">{{item.sku}}</span>
-                                {{item.productName}}
-                                </li>
-
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-            </div>
-
-
-            <div class="col-sm-12 col-md-6">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <!-- <h4 class="center">Group Items</h4>
-                        <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                        </div> -->
-
                         <h4 class="center">Group Items</h4>
-                        <ul class="list-group searchresults">
+                        <ul class="list-group grouplists">
                             <li ng-show="groupitems.length < 1" class="list-group-item disabled">No Items</li>
                             <li ng-repeat="(itemIndex, item) in groupitems track by $index" class="list-group-item list-group-item-action">
                                 <span class="badge badge-secondary">{{item.sku}}</span>
@@ -120,8 +138,60 @@
                         </ul>
                     </div>
                 </div>
+                <hr>
+            </div>
+
+        </div>
+
+        <!--
+            ##N##
+            Weekday offers: ???
+            Offer tier: ???:Id, Desc
+            Offer application logic: appliedOn-> All
+
+            ##Y##
+            Happy hours: from, to
+            Offer activation code: offerCode
+            Max application limit: number
+        -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h4 class="center">Advanced Options</h4>
+                        <div class="row">
+
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label for="offerType">Happy Hours:</label>
+                                <div class="input-group mb-3">
+                                    <input type="time" disabled class="form-control" placeholder="From" ng-model="happyHoursFrom">
+                                    <input type="time" disabled class="form-control" placeholder="To" ng-model="happyHoursTo">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label for="activationCode">Offer Activation Code:</label>
+                                <input type="text" name="activationCode" class="form-control" ng-model="activationCode">
+                            </div>
+
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label for="offerType">Max application Limit:</label>
+                                <input type="number" class="form-control" min="0" placeholder="From" ng-model="maxApplicationLimit">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
-    <!-- <div class="card-footer">Footer</div> -->
+
+    <div class="card-footer text-center">
+        <div class="btn-group btn-group-lg">
+            <button type="button" ng-click="savedata()" class="btn btn-success">Save</button>
+            <button type="button" onclick="location.reload()" class="btn btn-warning text-white">Reset</button>
+        </div>
+    </div>
 </div>

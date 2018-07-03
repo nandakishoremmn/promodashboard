@@ -11,6 +11,16 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
 
     .controller('Create1Ctrl', ['$scope', '$http', '$timeout', 'api', function ($scope, $http, $timeout, api) {
 
+        /* To ask:
+            >targetGroups
+            >targetId
+            >Upto or Exact
+            >Normal or Normore
+            >weekday offer
+            >offer tier
+            >offer app logic
+            ?
+        */
         // Load Options
         api.fetchOptions().then((data) => {
             // $scope.targetGroups = data.targetGroups;
@@ -18,15 +28,28 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             $scope.appliedOnOptions = data.appliedOnOptions;
             $scope.prereqTypeOptions = data.prereqTypeOptions;
             $scope.normTypeOptions = data.normTypeOptions;
+            $scope.targetGroupOptions = data.targetGroupOptions;
         });
 
         // Load Data and initialize
         api.fetchData().then((data) => {
-            console.log(data);
+            $scope.initialData = data;
+            $scope.startDate = new Date(data.startDate);
+            $scope.endDate = new Date(data.endDate);
+
             $scope.selectedOfferType = data.type;
             $scope.selectedAppliedOn = data.appliedOn;
             $scope.selectedPrereqType = data.preRequisiteType;
             $scope.selectedNormType = {};
+            $scope.selectedTargetGroup = {};
+
+            // $scope.targetID = data.targetIdCount.split(',')[0];
+            $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
+
+            $scope.offerValue = data.offerValue;
+            $scope.activationCode = data.offerCode;
+            $scope.maxApplicationLimit = data.maxApplicationLimit;
+
             $scope.groups = data.preRequisites;
 
             $scope.roleID = '10517844464';
@@ -38,9 +61,9 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             $scope.searchterm = "";
             $scope.searchRes = []
             $scope.searchingInProgress = false;
-                
+
         });
-            var searchTimeOut;
+        var searchTimeOut;
 
         // ############################################################
         // ###############           Functions          ###############
