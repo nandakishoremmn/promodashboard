@@ -4,7 +4,7 @@ angular.module('myApp.create', ['ngRoute'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/create', {
-            templateUrl: 'create/create.html',
+            templateUrl: 'app/controllers/create/create.html',
             controller: 'Create1Ctrl'
         });
     }])
@@ -68,7 +68,7 @@ angular.module('myApp.create', ['ngRoute'])
                     {
                         "productName": "Gebi Garbage Bag Small 30 Pc 1",
                         "sku": "100000613"
-                    }
+                    },
                 ],
             },
             {
@@ -82,19 +82,20 @@ angular.module('myApp.create', ['ngRoute'])
         ];
         $scope.roleID = '10517844464';
         $scope.currGroupIndex = 0;
+        $scope.gpqty = parseInt($scope.groups[$scope.currGroupIndex].quantity);
+        $scope.lastGpByLength = $scope.groups.length;
         $scope.summaryText = "";
         $scope.groupitems = [];
         $scope.searchterm = "";
         $scope.searchRes = []
         $scope.searchingInProgress = false;
-
         var searchTimeOut;
 
-        // ##############################
-        // #####      Functions     #####
-        // ##############################
-        
 
+        // ############################################################
+        // ###############           Functions          ###############
+        // ############################################################
+        
         $scope.getSummaryText = group => {
             var maxlength = 40;
             var itemlist = group.items.map(item => item.productName).toString();
@@ -102,9 +103,14 @@ angular.module('myApp.create', ['ngRoute'])
             return (itemlist.length > maxlength ? itemlist.substring(0, maxlength) + '...' : itemlist);
         }
 
+        $scope.setQty = () => {
+            $scope.groups[$scope.currGroupIndex].quantity = $scope.gpqty;
+        }
+
         $scope.setGroup = groupIndex => {
             $scope.currGroupIndex = groupIndex;
             $scope.loadGroupItems(groupIndex);
+            $scope.gpqty = parseInt($scope.groups[$scope.currGroupIndex].quantity);
         }
 
         $scope.loadGroupItems = groupIndex => {
@@ -114,16 +120,21 @@ angular.module('myApp.create', ['ngRoute'])
         $scope.createGroup = () => {
             $scope.groups.push(
                 {
-                    "groupId": $scope.roleID + String.fromCharCode('a'.charCodeAt() + $scope.groups.length),
+                    "groupId": $scope.roleID + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
                     "quantity": 1,
                     "items": [],
                 }
-            )
+            );
+            $scope.lastGpByLength = ($scope.lastGpByLength < $scope.groups.length ? $scope.groups.length : $scope.lastGpByLength)
         }
 
         $scope.deleteGroup = () => {
             $scope.groups.splice($scope.currGroupIndex--, 1);
             $scope.loadGroupItems($scope.currGroupIndex);
+        }
+
+        $scope.addItem = itemIndex => {
+            $scope.groups[$scope.currGroupIndex].items.push($scope.searchRes[itemIndex]);
         }
 
         $scope.deleteItem = itemIndex => {
