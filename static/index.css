@@ -18,3 +18,8 @@
     max-height: 480px;
     overflow-y: auto;
 }
+
+.qtyBox
+{
+    width: 25%!important;
+}
