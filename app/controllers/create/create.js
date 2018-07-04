@@ -30,28 +30,32 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             $scope.prereqTypeOptions = data.prereqTypeOptions;
             $scope.normTypeOptions = data.normTypeOptions;
             $scope.targetGroupOptions = data.targetGroupOptions;
-        });
+        }).then(() => {
+            // Initialize
 
-        // Load Data and initialize
-        api.fetchData().then((data) => {
-            $scope.initialData = data;
-            $scope.startDate = new Date(data.startDate);
-            $scope.endDate = new Date(data.endDate);
+            // From ten days later to a month from that
+            $scope.startDate = new Date(Date.now());
+            $scope.startDate.setDate($scope.startDate.getDate() + 10);
 
-            $scope.selectedOfferType = data.type;
-            $scope.selectedAppliedOn = data.appliedOn;
-            $scope.selectedPrereqType = data.preRequisiteType;
-            $scope.selectedNormType = {};
-            $scope.selectedTargetGroup = {};
+            $scope.endDate = new Date($scope.startDate);
+            $scope.endDate.setMonth($scope.endDate.getMonth() + 1);
+
+            $scope.selectedOfferType = $scope.offerTypesOptions[0];
+            $scope.selectedAppliedOn = $scope.appliedOnOptions[0];
+            $scope.selectedPrereqType = $scope.prereqTypeOptions[0];
+            $scope.selectedNormType = $scope.normTypeOptions[0];
+            
+            // $scope.selectedTargetGroup = {};
 
             // $scope.targetID = data.targetIdCount.split(',')[0];
-            $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
+            // $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
 
-            $scope.offerValue = data.offerValue;
-            $scope.activationCode = data.offerCode;
-            $scope.maxApplicationLimit = data.maxApplicationLimit;
+            // $scope.offerValue = data.offerValue;
+            // $scope.activationCode = data.offerCode;
+            // $scope.maxApplicationLimit = data.maxApplicationLimit;
 
-            $scope.groups = data.preRequisites;
+            // $scope.groups = data.preRequisites;
+            $scope.groups = [];
 
             $scope.ruleID = Math.random().toString(10).substring(11);
             // $scope.ruleID = '10517844464' + 1;
@@ -64,7 +68,42 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             $scope.searchRes = []
             $scope.searchingInProgress = false;
 
-        });
+
+        })
+
+        // Load Data and initialize
+        // api.fetchData().then((data) => {
+        //     $scope.initialData = data;
+        //     $scope.startDate = new Date(data.startDate);
+        //     $scope.endDate = new Date(data.endDate);
+
+        //     $scope.selectedOfferType = data.type;
+        //     $scope.selectedAppliedOn = data.appliedOn;
+        //     $scope.selectedPrereqType = data.preRequisiteType;
+        //     $scope.selectedNormType = {};
+        //     $scope.selectedTargetGroup = {};
+
+        //     // $scope.targetID = data.targetIdCount.split(',')[0];
+        //     $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
+
+        //     $scope.offerValue = data.offerValue;
+        //     $scope.activationCode = data.offerCode;
+        //     $scope.maxApplicationLimit = data.maxApplicationLimit;
+
+        //     $scope.groups = data.preRequisites;
+
+        //     $scope.ruleID = Math.random().toString(10).substring(11);
+        //     // $scope.ruleID = '10517844464' + 1;
+        //     $scope.currGroupIndex = -1;
+        //     $scope.gpqty = ($scope.currGroupIndex == -1 ? 0 : parseInt($scope.groups[$scope.currGroupIndex].quantity));
+        //     $scope.lastGpByLength = $scope.groups.length;
+        //     $scope.summaryText = "";
+        //     $scope.groupitems = [];
+        //     $scope.searchterm = "";
+        //     $scope.searchRes = []
+        //     $scope.searchingInProgress = false;
+        // });
+
 
         $scope.savedata = () => {
             // $scope.startDate = new Date(data.startDate);
@@ -96,13 +135,14 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
         // ############################################################
 
         $scope.getSummaryText = group => {
-            var maxlength = 40;
+            // var maxlength = 60;
             var itemlist = group.items.map(item => item.productName).toString();
-            return (itemlist == '' ? "<No Items>" : (itemlist.length > maxlength ? itemlist.substring(0, maxlength) + '...' : itemlist))
+            // return (itemlist == '' ? "<No Items>" : (itemlist.length > maxlength ? itemlist.substring(0, maxlength) + '...' : itemlist));
+            return (itemlist == '' ? "<No Items>" : itemlist);
         }
 
         $scope.setQty = () => {
-            $scope.groups[$scope.currGroupIndex].quantity = $scope.gpqty;
+            $scope.currGroupIndex != -1 && ($scope.groups[$scope.currGroupIndex].quantity = $scope.gpqty);
         }
 
         $scope.setGroup = groupIndex => {
@@ -118,15 +158,16 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
         $scope.createGroup = () => {
             $scope.groups.push({
                 "groupId": $scope.ruleID + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
-                "quantity": 1,
+                "quantity": ($scope.currGroupIndex == -1 ? $scope.gpqty : 1),
                 "items": [],
             });
             $scope.lastGpByLength = ($scope.lastGpByLength++ < $scope.groups.length ? $scope.groups.length : ($scope.groups.length == 0 ? 0 : $scope.lastGpByLength))
         }
 
-        $scope.deleteGroup = () => {
-            $scope.groups.splice($scope.currGroupIndex--, 1);
-            $scope.loadGroupItems($scope.currGroupIndex);
+        $scope.deleteGroup = (groupIndex) => {
+            console.log(groupIndex)
+            $scope.groups.splice(groupIndex, 1);
+            $scope.loadGroupItems(--$scope.currGroupIndex);
         }
 
         $scope.addItem = itemIndex => {

@@ -7,6 +7,13 @@
     overflow-y: auto;
 }
 
+.grouplists button.btn-block {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+
+}
+
 .searchresults {
     max-height: 480px;
     overflow-y: auto;
