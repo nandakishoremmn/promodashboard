@@ -62,7 +62,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             $scope.groups = [];
             $scope.qty = [];
 
-            $scope.ruleID = Math.random().toString(10).substring(11);
+            $scope.ruleId = Math.random().toString(10).substring(11);
             $scope.currGroupIndex = -1;
             // $scope.gpqty = ($scope.currGroupIndex == -1 ? 1 : parseInt($scope.groups[$scope.currGroupIndex].quantity));
             $scope.lastGpByLength = $scope.groups.length;
@@ -75,8 +75,8 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
         }).then(() => {
             // Watchers
             $scope.$watchCollection('[startDate, endDate]', () => {
-                $scope.happyHours = $scope.startDate.getHours() + ':' + $scope.startDate.getMinutes() +
-                    '-' + $scope.endDate.getHours() + ':' + $scope.endDate.getMinutes();
+                $scope.happyHours = $scope.startDate.getHours() + ':' + $scope.startDate.getMinutes() + ':00'
+                    '-' + $scope.endDate.getHours() + ':' + $scope.endDate.getMinutes() + ':00';
             });
 
             $scope.$watchCollection('[gpOfferType, gpOfferQty]', () => {
@@ -90,7 +90,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
         });
 
         $scope.paramsFinal = [
-            'ruleID',
+            'ruleId',
             'startDate',
             'endDate',
             'selectedOfferType',
@@ -217,7 +217,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
 
         $scope.createGroup = () => {
             $scope.groups.push({
-                "groupId": $scope.ruleID + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
+                "groupId": $scope.ruleId + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
                 "quantity": 1, //($scope.currGroupIndex == -1 ? $scope.gpqty : 1),
                 "items": [],
                 "gpOfferQty": ($scope.currGroupIndex == -1 ? $scope.gpOfferQty : 1),
