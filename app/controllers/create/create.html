@@ -4,16 +4,24 @@
     </div>
     <div class="card-body">
         <div class="row">
-
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="startdate">Start Date:</label>
-                <input type="date" name="startdate" class="form-control" ng-model="startDate">
-                <p class="small text-muted text-center">Will start at the midnight of the selected date.</p>
+                <label for="startdate">Start &amp; End Date:</label>
+                <div class="input-group mb-3">
+                    <input type="date" name="startdate" class="form-control" ng-model="startDate">
+                    <input type="date" name="enddate" class="form-control" ng-model="endDate">
+                </div>
             </div>
-            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+            <!-- <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="enddate">End Date:</label>
                 <input type="date" name="enddate" class="form-control" ng-model="endDate">
-                <p class="small text-muted text-center">Will end on the midnight of the previous date.</p>
+            </div> -->
+            <!-- <p class="small text-muted text-center">Will end on the midnight of the previous date.</p> -->
+            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                <label for="offerType">Happy Hours:</label>
+                <div class="input-group mb-3">
+                    <input type="time" class="form-control" ng-model="startDate">
+                    <input type="time" class="form-control" ng-model="endDate">
+                </div>
             </div>
             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                 <label for="offerType">Offer Type:</label>
@@ -37,15 +45,12 @@
                 <select class="form-control" id="normType" ng-options="normType as normType.label for normType in normTypeOptions" ng-model="selectedNormType">
                 </select>
             </div>
-
             <hr>
-
             <div class="form-group col-sm-12">
                 <div class="card bg-light">
                     <div class="card-body">
                         <h4 class="center">Target</h4>
                         <div class="row">
-
                             <div class="col-sm-12 input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Target Group</span>
@@ -53,20 +58,16 @@
                                 <select placeholder="Target Group" class="form-control" id="targetGroups" ng-options="targetGroup as targetGroup.label for targetGroup in targetGroupOptions"
                                     ng-model="selectedTargetGroup">
                                 </select>
-
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
                                         <input type="checkbox" ng-model="lineSpecOffer"> &nbsp; Line Spec Offer
                                     </span>
                                 </div>
-
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Offer Amount</span>
                                 </div>
                                 <input type="number" name="offerValue" class="form-control" min="0" ng-model="offerValue" ng-disabled="lineSpecOffer">
-
                             </div>
-
                             <div class="col-sm-12 input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Count</span>
@@ -84,16 +85,13 @@
                                     ng-disabled="selectedTargetGroup == targetGroupOptions[0]">
                                 </select>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <hr>
-
     <div class="row">
         <div class="col-sm-12 col-md-6">
             <div class="card bg-light">
@@ -118,12 +116,10 @@
             </div>
             <hr>
         </div>
-
         <div class="col-sm-12 col-md-6">
             <div class="card bg-light">
                 <div class="card-body">
                     <h4 class="center">Groups</h4>
-
                     <!-- <ul class="list-group grouplists">
                         <li href="" class="list-group-item list-group-item-action" ng-repeat="(groupIndex, group) in groups track by $index" ng-class="{'active': groupIndex == currGroupIndex}"
                             ng-click="setGroup(groupIndex)">
@@ -152,19 +148,20 @@
                         <button class="btn btn-success" ng-click="createGroup()">Create</button>
                         <!-- <button class="btn btn-danger" ng-disabled="currGroupIndex < 0" ng-click="deleteGroup()">Delete</button> -->
                     </div>
+                    <br>
+                    <label ng-show="lineSpecOffer">Offer: </label>
                     <div class="input-group" ng-show="lineSpecOffer">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Offer Amount: </span>
+                            <span class="input-group-text">Amount: </span>
                         </div>
                         <input type="number" id="gpOfferQty" class="form-control" min="1" ng-model="gpOfferQty" ng-change="setGpOfferQty()">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Offer Type: </span>
+                            <span class="input-group-text">Type: </span>
                         </div>
                         <select class="form-control" id="gpOfferType" ng-options="offerType as offerType.label for offerType in offerTypesOptions"
                             ng-model="gpOfferType" change="setGpOfferType()">
                         </select>
                     </div>
-
                 </div>
             </div>
             <hr>
@@ -183,61 +180,65 @@
             </div>
             <hr>
         </div>
-
     </div>
-
-    <!--
-            ##N##
-            Weekday offers: ???
-            Offer tier: ???:Id, Desc
-            Offer application logic: appliedOn-> All
-
-            ##Y##
-            Happy hours: from, to
-            Offer activation code: offerCode
-            Max application limit: number
-        -->
-
     <div class="row">
         <div class="col-sm-12">
-
-            <button type="button" class="btn btn-block btn-outline-primary" data-toggle="collapse" data-target="#demo">Show Advanced Options</button>
-            <div id="demo" class="collapse">
+            <button type="button" class="btn btn-block btn-outline-primary" data-toggle="collapse" data-target="#advanced">Show Advanced Options</button>
+            <div id="advanced" class="collapse">
                 <div class="card bg-light">
                     <div class="card-body">
                         <h4 class="center">Advanced Options</h4>
                         <div class="row">
-
-                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                                <label for="offerType">Happy Hours:</label>
-                                <div class="input-group mb-3">
-                                    <input type="time" disabled class="form-control" placeholder="From" ng-model="happyHoursFrom">
-                                    <input type="time" disabled class="form-control" placeholder="To" ng-model="happyHoursTo">
-                                </div>
-                            </div>
-
                             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                                 <label for="activationCode">Offer Activation Code:</label>
                                 <input type="text" name="activationCode" class="form-control" ng-model="activationCode">
                             </div>
-
                             <div class="form-group col-md-6 col-sm-12 col-lg-4">
                                 <label for="offerType">Max application Limit:</label>
-                                <input type="number" class="form-control" min="0" placeholder="From" ng-model="maxApplicationLimit">
+                                <input type="number" class="form-control" min="0" placeholder="Max Application Limit" ng-model="maxApplicationLimit">
+                            </div>
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label for="offerTier">Offer Tier:</label>
+                                <input type="number" class="form-control" placeholder="Offer Tier" ng-model="offerTier">
+                            </div>
+                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                <label for="offerTier">Offer Tier:</label>
+                                <select class="form-control" id="offerApplicationLogic" ng-options="offerApplicationLogicitem as offerApplicationLogicitem.label for offerApplicationLogicitem in offerApplicationLogicOptions" ng-model="offerApplicationLogic">
+                                </select>
                             </div>
 
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
     </div>
-
+    <hr>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 justified text-center table-responsive">
+            <h2>Parameters</h2>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="param in paramsFinal">
+                        <td>{{param}}</td>
+                        <td>{{getParam(param)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-12 col-md-6 justified ">
+            <h2 class="text-center">Groups</h2>
+            <pre class="bg-warning text-white border grouplists">{{groups | json}}</pre>
+        </div>
+    </div>
 </div>
-
+<br>
 <div class="card-footer text-center">
     <div class="btn-group btn-group-lg">
         <button type="button" ng-click="savedata()" class="btn btn-success">Save</button>

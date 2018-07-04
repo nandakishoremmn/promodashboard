@@ -51,5 +51,15 @@
             "value": "another",
             "label": "Another group"
         }
+    ],
+
+    "offerApplicationLogicOptions": [{
+            "value": "bestbuy",
+            "label": "Bestbuy"
+        },
+        {
+            "value": "priority",
+            "label": "Priority"
+        }
     ]
 }
