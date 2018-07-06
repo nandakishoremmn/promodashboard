@@ -21,13 +21,31 @@ angular.module('myApp.list', ['ngRoute', 'myApp.factory'])
             success: 'Offers Loaded',
         }
 
+        var fetchTimeOut;
+
         $scope.fetchList = () => {
+            if (fetchTimeOut) $timeout.cancel(fetchTimeOut);
+
             $scope.loading = true;
-            api.listOffers($scope.shopID).then((data) => {
-                $scope.loading = false;
-                console.log(data);
-                $scope.offers = data;
-            });
+            $scope.offers = [];
+            fetchTimeOut = $timeout(() => {
+
+                api.listOffers($scope.shopID).then((data) => {
+                    console.log(data);
+                    $scope.loading = false;
+                    $scope.offers = data;
+                });
+            }, 10);
+
         }
+
+        $scope.getSummaryText = group => {
+            var itemlist = group.items.map(item => item.productName).toString();
+            return (itemlist == '' ? "<No Items>" : itemlist);
+        }
+
+
+        // Initialize
+        $scope.fetchList();
 
     }]);

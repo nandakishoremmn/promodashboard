@@ -7,7 +7,7 @@
     overflow-y: auto;
 }
 
-.grouplists button.btn-block {
+.grouplists button.btn-block, .truncate{
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis; 

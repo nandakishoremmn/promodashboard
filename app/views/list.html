@@ -2,7 +2,7 @@
     <h2 class="center col-md-12">List Offers
         <hr>
     </h2>
-    <div class="col-md-6">
+    <div class="col-md-6 mb-3">
         <div class="card">
             <h4 class="card-header center">Configuration</h4>
             <div class="card-body center">
@@ -10,26 +10,33 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">Shop ID</span>
                     </div>
-                    <input type="number" class="form-control" placeholder="Shop ID" ng-model="shopID">
+                    <input type="number" min="0" class="form-control" placeholder="Shop ID" ng-model="shopID">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">Limit</span>
                     </div>
-                    <input type="number" class="form-control" placeholder="Limit" ng-model="limit">
+                    <input type="number" min="0" class="form-control" placeholder="Limit" ng-model="limit">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">Offset</span>
                     </div>
-                    <input type="number" class="form-control" placeholder="Offset" ng-model="offset">
+                    <input type="number" min="0" class="form-control" placeholder="Offset" ng-model="offset">
                 </div>
-                <button class="btn btn-outline-primary" ng-click="fetchList()">Fetch Offers</button>
-
+                <div class="btn-group mb-3">
+                    <button class="btn btn-outline-{{offers.length==0?'warning':'success'}}" ng-click="offset = offset - limit" ng-disabled="offers.length == 0 || offset < limit">Previous</button>
+                    <button class="btn btn-outline-primary" ng-click="fetchList()">Fetch Offers</button>
+                    <button class="btn btn-outline-{{offers.length==0?'warning':'success'}}" ng-click="offset = offset + limit" ng-disabled="offers.length == 0 || offset + limit > offers.length">Next</button>
+                </div>
+                <div class="progress" ng-show="loading">
+                    <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" style="width: 100%"></div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+
+    <div class="col-md-6 mb-3">
         <div class="card">
             <h4 class="card-header center">Information</h4>
             <div class="card-body">
@@ -37,19 +44,34 @@
                     <li class="list-group-item">Total Count: {{offers.length}}</li>
                     <li class="list-group-item">Current from: {{offset}}</li>
                     <li class="list-group-item">Current to: {{offset + limit}}</li>
-                    <li class="list-group-item center">
-                        <button type="button" disabled class="btn btn-outline-{{status = loading? 'warning' : (offers.length==0?'secondary':'success')}}">{{statusMessages[status]}}</button>
-                    </li>
                 </ul>
+                <br>
+                <div class="center">
+                    <button type="button" disabled class="btn btn-lg btn-outline-{{status = loading? 'warning' : (offers.length==0?'secondary':'success')}}">{{statusMessages[status]}}</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-12" >
         <hr>
+        <div ng-show="offers.length == 0 && !loading" class="jumbotron jumbotron-sm center">
+            <h4>No offers found</h4>
+            <small class="text-muted">shopID: {{shopID}}</small>
+            <p>
+                <a href="/#!/create" class="btn btn-outline-success">Create an offer</a>
+            </p>
+        </div>
         <div class="list-group">
-            <a disabled href="" ng-repeat="offer in offers.slice(offset, offset+limit)" class="list-group-item list-group-item-action">
-                {{offer}}
+            <a href="/#!/edit/{{shopID}}/" ng-repeat="(i, offer) in offers.slice(offset, offset+limit)" class="flex-column align-items-start list-group-item list-group-item-action">
+                <div class="w-100 justify-content-between">
+                    <span class="badge badge-dark float-left">{{i + offset + 1}}</span>
+                    <span class="badge badge-secondary float-right">Target: {{offer.groupId}}</span>
+                    <h5 class="mb-1">&nbsp; List group item heading</h5>
+                </div>
+                <small class="badge badge-info">{{offer.offerCode}}</small>
+                <p class="mb-1 truncate">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                <small>{{offer.startDate | date}} - {{offer.endDate | date}}</small>
             </a>
         </div>
     </div>
