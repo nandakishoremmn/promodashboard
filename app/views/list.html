@@ -1,0 +1,56 @@
+<div class="row">
+    <h2 class="center col-md-12">List Offers
+        <hr>
+    </h2>
+    <div class="col-md-6">
+        <div class="card">
+            <h4 class="card-header center">Configuration</h4>
+            <div class="card-body center">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Shop ID</span>
+                    </div>
+                    <input type="number" class="form-control" placeholder="Shop ID" ng-model="shopID">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Limit</span>
+                    </div>
+                    <input type="number" class="form-control" placeholder="Limit" ng-model="limit">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Offset</span>
+                    </div>
+                    <input type="number" class="form-control" placeholder="Offset" ng-model="offset">
+                </div>
+                <button class="btn btn-outline-primary" ng-click="fetchList()">Fetch Offers</button>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <h4 class="card-header center">Information</h4>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Total Count: {{offers.length}}</li>
+                    <li class="list-group-item">Current from: {{offset}}</li>
+                    <li class="list-group-item">Current to: {{offset + limit}}</li>
+                    <li class="list-group-item center">
+                        <button type="button" disabled class="btn btn-outline-{{status = loading? 'warning' : (offers.length==0?'secondary':'success')}}">{{statusMessages[status]}}</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <hr>
+        <div class="list-group">
+            <a disabled href="" ng-repeat="offer in offers.slice(offset, offset+limit)" class="list-group-item list-group-item-action">
+                {{offer}}
+            </a>
+        </div>
+    </div>
+</div>

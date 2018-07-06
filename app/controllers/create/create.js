@@ -4,12 +4,12 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/create', {
-            templateUrl: 'app/controllers/create/create.html',
-            controller: 'Create1Ctrl'
+            templateUrl: 'app/views/offer.html',
+            controller: 'CreateCtrl'
         });
     }])
 
-    .controller('Create1Ctrl', ['$scope', '$http', '$timeout', 'api', function ($scope, $http, $timeout, api) {
+    .controller('CreateCtrl', ['$scope', '$http', '$timeout', 'api', function ($scope, $http, $timeout, api) {
 
         // Todo: breadcrumb notifs
         // Load Options

@@ -5,11 +5,10 @@ angular.module('myApp', [
   'ngRoute',
   'myApp.factory',
   'myApp.create',
-//   'myApp.edit',
-//   'myApp.admin',
+  'myApp.list',
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');
 // 
-  $routeProvider.otherwise({redirectTo: '/create'});
+  // $routeProvider.otherwise({redirectTo: '/create'});
 }]);
