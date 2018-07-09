@@ -1,126 +1,154 @@
-<div class="card">
-    <div class="card-header center">
-        <h2>Create Offer</h2>
-    </div>
-    <div class="card-body">
+<div class="alert alert-danger" ng-show="{{actionType.value == 'undefined'}}">
+    Invalid action: {{actionType.input}}.
+</div>
+<span ng-hide="{{actionType.value == 'undefined'}}">
+    <div class="card">
+        <div class="card-header center">
+            <h2>{{actionType.title}}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-12" ng-show="{{actionType.value == 'edit'}}">
+                    <div class="card bg-light">
+                        <div class="card-body row center">
+                            <div class="form-group col-sm-12 col-md-5">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Shop ID</span>
+                                    </div>
+                                    <input type="number" min="0" class="form-control" placeholder="Shop ID" ng-model="actionType.data.shopId">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-5">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Offer Rule ID</span>
+                                    </div>
+                                    <input type="number" min="0" class="form-control" placeholder="Offer Rule ID" ng-model="actionType.data.ruleId">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-2">
+                                <button class="btn btn-outline-success">Fetch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                    <label for="startdate">Start &amp; End Date:</label>
+                    <div class="input-group mb-3">
+                        <input type="date" name="startdate" class="form-control" ng-model="startDate">
+                        <input type="date" name="enddate" class="form-control" ng-model="endDate">
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                    <label for="offerType">Happy Hours:</label>
+                    <div class="input-group mb-3">
+                        <input type="time" class="form-control" ng-model="startDate">
+                        <input type="time" class="form-control" ng-model="endDate">
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                    <label for="offerType">Offer Type:</label>
+                    <select class="form-control" id="offerType" ng-options="offerType as offerType.label for offerType in offerTypesOptions"
+                        ng-model="selectedOfferType" ng-disabled="lineSpecOffer">
+                    </select>
+                </div>
+                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                    <label for="offerType">Applied On:</label>
+                    <select class="form-control" id="appliedOn" ng-options="on as on.label for on in appliedOnOptions" ng-model="selectedAppliedOn">
+                    </select>
+                </div>
+                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                    <label for="offerType">Prerequisite Type:</label>
+                    <select class="form-control" id="prereqType" ng-options="prereqType as prereqType.label for prereqType in prereqTypeOptions"
+                        ng-model="selectedPrereqType">
+                    </select>
+                </div>
+                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                    <label for="offerType">Norm Type:</label>
+                    <select class="form-control" id="normType" ng-options="normType as normType.label for normType in normTypeOptions" ng-model="selectedNormType">
+                    </select>
+                </div>
+                <hr>
+                <div class="form-group col-sm-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h4 class="center">Target</h4>
+                            <div class="row">
+                                <div class="col-sm-12 input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Target Group Type</span>
+                                    </div>
+                                    <select placeholder="Target Group" class="form-control" id="targetGroups" ng-options="targetGroup as targetGroup.label for targetGroup in targetGroupOptions"
+                                        ng-model="selectedTargetGroup" ng-change="targetCount = 1" ng-disabled="groups.length < 2">
+                                    </select>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <input type="checkbox" ng-model="lineSpecOffer"> &nbsp; Line Spec Offer
+                                        </span>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Offer Amount</span>
+                                    </div>
+                                    <input type="number" name="offerValue" class="form-control" min="0" ng-model="offerValue" ng-disabled="lineSpecOffer">
+                                </div>
+                                <div class="col-sm-12 input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Count</span>
+                                    </div>
+                                    <input placeholder="Target Count" type="number" name="targetCount" class="form-control" min="0" ng-model="targetCount" ng-disabled="selectedTargetGroup == targetGroupOptions[0] && groups.length != 1">
+                                    <!--max="{{(selectedTargetGroup == targetGroupOptions[0] ? targetGroup.quantity : targetGroup.quantity)}}"-->
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <input type="checkbox" ng-model="exactOrUpto"> &nbsp; {{exactOrUpto?'Exact':'Upto'}}
+                                        </span>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Target Group</span>
+                                    </div>
+                                    <select class="form-control" id="targetGroup" ng-options="group as group.groupId for group in groups" ng-change="targetCount = 1"
+                                        ng-model="targetGroup" ng-disabled="selectedTargetGroup == targetGroupOptions[0]">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
         <div class="row">
-            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="startdate">Start &amp; End Date:</label>
-                <div class="input-group mb-3">
-                    <input type="date" name="startdate" class="form-control" ng-model="startDate">
-                    <input type="date" name="enddate" class="form-control" ng-model="endDate">
-                </div>
-            </div>
-            <!-- <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="enddate">End Date:</label>
-                <input type="date" name="enddate" class="form-control" ng-model="endDate">
-            </div> -->
-            <!-- <p class="small text-muted text-center">Will end on the midnight of the previous date.</p> -->
-            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="offerType">Happy Hours:</label>
-                <div class="input-group mb-3">
-                    <input type="time" class="form-control" ng-model="startDate">
-                    <input type="time" class="form-control" ng-model="endDate">
-                </div>
-            </div>
-            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="offerType">Offer Type:</label>
-                <select class="form-control" id="offerType" ng-options="offerType as offerType.label for offerType in offerTypesOptions"
-                    ng-model="selectedOfferType" ng-disabled="lineSpecOffer">
-                </select>
-            </div>
-            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="offerType">Applied On:</label>
-                <select class="form-control" id="appliedOn" ng-options="on as on.label for on in appliedOnOptions" ng-model="selectedAppliedOn">
-                </select>
-            </div>
-            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="offerType">Prerequisite Type:</label>
-                <select class="form-control" id="prereqType" ng-options="prereqType as prereqType.label for prereqType in prereqTypeOptions"
-                    ng-model="selectedPrereqType">
-                </select>
-            </div>
-            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                <label for="offerType">Norm Type:</label>
-                <select class="form-control" id="normType" ng-options="normType as normType.label for normType in normTypeOptions" ng-model="selectedNormType">
-                </select>
-            </div>
-            <hr>
-            <div class="form-group col-sm-12">
+            <div class="col-sm-12 col-md-6">
                 <div class="card bg-light">
                     <div class="card-body">
-                        <h4 class="center">Target</h4>
-                        <div class="row">
-                            <div class="col-sm-12 input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Target Group Type</span>
-                                </div>
-                                <select placeholder="Target Group" class="form-control" id="targetGroups" ng-options="targetGroup as targetGroup.label for targetGroup in targetGroupOptions"
-                                    ng-model="selectedTargetGroup" ng-change="targetCount = 1" ng-disabled="groups.length < 2">
-                                </select>
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <input type="checkbox" ng-model="lineSpecOffer"> &nbsp; Line Spec Offer
-                                    </span>
-                                </div>
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Offer Amount</span>
-                                </div>
-                                <input type="number" name="offerValue" class="form-control" min="0" ng-model="offerValue" ng-disabled="lineSpecOffer">
+                        <h4 class="center">Add items</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Search" ng-model="searchterm" ng-change="fetchSearchItems()">
+                            <div class="input-group-append">
+                                <button class="btn btn-dark btn-sm" type="submit" ng-show="searchingInProgress" disabled>Loading</button>
                             </div>
-                            <div class="col-sm-12 input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Count</span>
-                                </div>
-                                <input placeholder="Target Count" type="number" name="targetCount" class="form-control" min="0" ng-model="targetCount" ng-disabled="selectedTargetGroup == targetGroupOptions[0] && groups.length != 1"> <!--max="{{(selectedTargetGroup == targetGroupOptions[0] ? targetGroup.quantity : targetGroup.quantity)}}"-->
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <input type="checkbox" ng-model="exactOrUpto"> &nbsp; {{exactOrUpto?'Exact':'Upto'}}
-                                    </span>
-                                </div>
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Target Group</span>
-                                </div>
-                                <select class="form-control" id="targetGroup" ng-options="group as group.groupId for group in groups" ng-change="targetCount = 1" ng-model="targetGroup"
-                                    ng-disabled="selectedTargetGroup == targetGroupOptions[0]">
-                                </select>
-                            </div>
+                        </div>
+                        <p class="small text-muted text-center" ng-hide="searchRes.length == 0">Click on item to add.</p>
+                        <div class="list-group searchresults">
+                            <a href="" data-toggle="tooltip" title="Click To Add" class="list-group-item list-group-item-action" ng-repeat="(itemIndex, item) in searchRes track by $index"
+                                ng-click="addItem(itemIndex)">
+                                <span class="badge badge-secondary">{{item.sku}}</span>
+                                {{item.productName}}
+                                </li>
+                            </a>
                         </div>
                     </div>
                 </div>
+                <hr>
             </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h4 class="center">Add items</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Search" ng-model="searchterm" ng-change="fetchSearchItems()">
-                        <div class="input-group-append">
-                            <button class="btn btn-dark btn-sm" type="submit" ng-show="searchingInProgress" disabled>Loading</button>
-                        </div>
-                    </div>
-                    <p class="small text-muted text-center" ng-hide="searchRes.length == 0">Click on item to add.</p>
-                    <div class="list-group searchresults">
-                        <a href="" data-toggle="tooltip" title="Click To Add" class="list-group-item list-group-item-action" ng-repeat="(itemIndex, item) in searchRes track by $index"
-                            ng-click="addItem(itemIndex)">
-                            <span class="badge badge-secondary">{{item.sku}}</span>
-                            {{item.productName}}
-                            </li>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <hr>
-        </div>
-        <div class="col-sm-12 col-md-6">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h4 class="center">Groups</h4>
-                    <!-- <ul class="list-group grouplists">
+            <div class="col-sm-12 col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h4 class="center">Groups</h4>
+                        <!-- <ul class="list-group grouplists">
                         <li href="" class="list-group-item list-group-item-action" ng-repeat="(groupIndex, group) in groups track by $index" ng-class="{'active': groupIndex == currGroupIndex}"
                             ng-click="setGroup(groupIndex)">
                             <span class="badge badge-secondary">{{group.groupId}} </span> 
@@ -128,132 +156,133 @@
                             <span class="badge badge-success badge-pill float-right">{{group.quantity}}</span>
                         </li>
                     </ul> -->
-                    <div class="grouplists">
-                        <div class="btn-group btn-block btn-group-justified" ng-repeat="(groupIndex, group) in groups track by $index">
-                            <button type="button" class="btn btn-sm disabled btn-dark">{{group.groupId}}</button>
-                            <button type="button" class="btn-block btn" ng-click="setGroup(groupIndex)" ng-class="{'btn-outline-primary': groupIndex != currGroupIndex, 'btn-primary': groupIndex == currGroupIndex}">
-                                <!-- <span class="badge badge-secondary float-left">{{group.groupId}} </span>  -->
-                                {{getSummaryText(group)}}
-                            </button>
-                            <!-- <button type="button" class="btn btn-sm disabled btn-outline-success">{{group.quantity}}</button> -->
-                            <input type="number" class="form-control btn btn-outline-light text-dark btn-sm border border-success qtyBox" min="1" ng-change="setQty(groupIndex)" ng-model="qty[groupIndex]">
-                            <button type="button" class="btn btn-sm btn-danger" ng-click="deleteGroup(groupIndex)">Delete</button>
+                        <div class="grouplists">
+                            <div class="btn-group btn-block btn-group-justified" ng-repeat="(groupIndex, group) in groups track by $index">
+                                <button type="button" class="btn btn-sm disabled btn-dark">{{group.groupId}}</button>
+                                <button type="button" class="btn-block btn" ng-click="setGroup(groupIndex)" ng-class="{'btn-outline-primary': groupIndex != currGroupIndex, 'btn-primary': groupIndex == currGroupIndex}">
+                                    <!-- <span class="badge badge-secondary float-left">{{group.groupId}} </span>  -->
+                                    {{getSummaryText(group)}}
+                                </button>
+                                <!-- <button type="button" class="btn btn-sm disabled btn-outline-success">{{group.quantity}}</button> -->
+                                <input type="number" class="form-control btn btn-outline-light text-dark btn-sm border border-success qtyBox" min="1" ng-change="setQty(groupIndex)"
+                                    ng-model="qty[groupIndex]">
+                                <button type="button" class="btn btn-sm btn-danger" ng-click="deleteGroup(groupIndex)">Delete</button>
+                            </div>
                         </div>
-                    </div>
-                    <br>
-                    <div class="input-group">
-                        <!-- <div class="input-group-prepend">
+                        <br>
+                        <div class="input-group">
+                            <!-- <div class="input-group-prepend">
                             <span class="input-group-text">Qty: </span>
                         </div>
                         <input type="number" name="gpqty" class="form-control" min="1" ng-model="gpqty" ng-change="setQty()"> -->
-                        <button class="btn btn-success" ng-click="createGroup()">Create</button>
-                        <!-- <button class="btn btn-danger" ng-disabled="currGroupIndex < 0" ng-click="deleteGroup()">Delete</button> -->
-                    </div>
-                    <br>
-                    <!-- <label ng-show="lineSpecOffer"></label> -->
-                    <div class="card" ng-show="lineSpecOffer">
-                        <div class="card-body">
-                            <h5 class="center">Line Spec Settings</h5>
-                            <div class="row">
-                                <div class="input-group col-sm-12" ng-show="lineSpecOffer">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Type: </span>
+                            <button class="btn btn-success" ng-click="createGroup()">Create</button>
+                            <!-- <button class="btn btn-danger" ng-disabled="currGroupIndex < 0" ng-click="deleteGroup()">Delete</button> -->
+                        </div>
+                        <br>
+                        <!-- <label ng-show="lineSpecOffer"></label> -->
+                        <div class="card" ng-show="lineSpecOffer">
+                            <div class="card-body">
+                                <h5 class="center">Line Spec Settings</h5>
+                                <div class="row">
+                                    <div class="input-group col-sm-12" ng-show="lineSpecOffer">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Type: </span>
+                                        </div>
+                                        <select class="form-control" id="gpOfferType" ng-options="offerType as offerType.label for offerType in offerTypesOptions"
+                                            ng-model="gpOfferType">
+                                        </select>
+                                        <div class="input-group col-sm-12">
+                                        </div>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Amount: </span>
+                                        </div>
+                                        <input type="number" id="gpOfferQty" class="form-control" min="1" ng-model="gpOfferQty">
                                     </div>
-                                    <select class="form-control" id="gpOfferType" ng-options="offerType as offerType.label for offerType in offerTypesOptions"
-                                        ng-model="gpOfferType">
-                                    </select>
-                                    <div class="input-group col-sm-12">
-                                    </div>
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Amount: </span>
-                                    </div>
-                                    <input type="number" id="gpOfferQty" class="form-control" min="1" ng-model="gpOfferQty">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <hr>
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h4 class="center">Group Items</h4>
-                    <ul class="list-group grouplists">
-                        <li ng-show="groupitems.length < 1" class="list-group-item disabled">No Items</li>
-                        <li ng-repeat="(itemIndex, item) in groupitems track by $index" class="list-group-item list-group-item-action">
-                            <span class="badge badge-secondary">{{item.sku}}</span>
-                            {{item.productName}}
-                            <button type="button" class="btn text-right float-right btn-sm btn-danger" ng-click="deleteItem(itemIndex)">Delete</button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-outline-primary" data-toggle="collapse" data-target="#advanced">Show Advanced Options</button>
-            <div id="advanced" class="collapse">
+                <hr>
                 <div class="card bg-light">
                     <div class="card-body">
-                        <h4 class="center">Advanced Options</h4>
-                        <div class="row">
-                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                                <label for="activationCode">Offer Activation Code:</label>
-                                <input type="text" name="activationCode" class="form-control" ng-model="activationCode">
-                            </div>
-                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                                <label for="offerType">Max application Limit:</label>
-                                <input type="number" class="form-control" min="0" placeholder="Max Application Limit" ng-model="maxApplicationLimit">
-                            </div>
-                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                                <label for="offerTier">Offer Tier:</label>
-                                <input type="number" class="form-control" placeholder="Offer Tier" ng-model="offerTier">
-                            </div>
-                            <div class="form-group col-md-6 col-sm-12 col-lg-4">
-                                <label for="offerTier">Offer Tier:</label>
-                                <select class="form-control" id="offerApplicationLogic" ng-options="offerApplicationLogicitem as offerApplicationLogicitem.label for offerApplicationLogicitem in offerApplicationLogicOptions"
-                                    ng-model="offerApplicationLogic">
-                                </select>
-                            </div>
+                        <h4 class="center">Group Items</h4>
+                        <ul class="list-group grouplists">
+                            <li ng-show="groupitems.length < 1" class="list-group-item disabled">No Items</li>
+                            <li ng-repeat="(itemIndex, item) in groupitems track by $index" class="list-group-item list-group-item-action">
+                                <span class="badge badge-secondary">{{item.sku}}</span>
+                                {{item.productName}}
+                                <button type="button" class="btn text-right float-right btn-sm btn-danger" ng-click="deleteItem(itemIndex)">Delete</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-block btn-outline-primary" data-toggle="collapse" data-target="#advanced">Show Advanced Options</button>
+                <div id="advanced" class="collapse">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h4 class="center">Advanced Options</h4>
+                            <div class="row">
+                                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                    <label for="activationCode">Offer Activation Code:</label>
+                                    <input type="text" name="activationCode" class="form-control" ng-model="activationCode">
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                    <label for="offerType">Max application Limit:</label>
+                                    <input type="number" class="form-control" min="0" placeholder="Max Application Limit" ng-model="maxApplicationLimit">
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                    <label for="offerTier">Offer Tier:</label>
+                                    <input type="number" class="form-control" placeholder="Offer Tier" ng-model="offerTier">
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-lg-4">
+                                    <label for="offerTier">Offer Tier:</label>
+                                    <select class="form-control" id="offerApplicationLogic" ng-options="offerApplicationLogicitem as offerApplicationLogicitem.label for offerApplicationLogicitem in offerApplicationLogicOptions"
+                                        ng-model="offerApplicationLogic">
+                                    </select>
+                                </div>
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-sm-12 col-md-6 justified text-center table-responsive">
-            <h2>Parameters</h2>
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Parameter</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="param in paramsFinal">
-                        <td>{{param}}</td>
-                        <td>{{getParam(param)}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <hr>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 justified text-center table-responsive">
+                <h2>Parameters</h2>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="param in paramsFinal">
+                            <td>{{param}}</td>
+                            <td>{{getParam(param)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-12 col-md-6 justified ">
+                <h2 class="text-center">Groups</h2>
+                <pre class="bg-warning text-white border grouplists">{{groups | json}}</pre>
+            </div>
         </div>
-        <div class="col-sm-12 col-md-6 justified ">
-            <h2 class="text-center">Groups</h2>
-            <pre class="bg-warning text-white border grouplists">{{groups | json}}</pre>
+    </div>
+    <br>
+    <div class="card-footer text-center">
+        <div class="btn-group btn-group-lg">
+            <button type="button" ng-click="savedata()" class="btn btn-success">Save</button>
+            <button type="button" onclick="location.reload()" class="btn btn-warning text-white">Reset</button>
         </div>
     </div>
-</div>
-<br>
-<div class="card-footer text-center">
-    <div class="btn-group btn-group-lg">
-        <button type="button" ng-click="savedata()" class="btn btn-success">Save</button>
-        <button type="button" onclick="location.reload()" class="btn btn-warning text-white">Reset</button>
-    </div>
-</div>
-</div>
+</span>

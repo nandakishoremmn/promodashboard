@@ -59,15 +59,15 @@
             <h4>No offers found</h4>
             <small class="text-muted">shopID: {{shopID}}</small>
             <p>
-                <a href="/#!/create" class="btn btn-outline-success">Create an offer</a>
+                <a href="/#!/offer?action=create" class="btn btn-outline-success">Create an offer</a>
             </p>
         </div>
         <div class="list-group">
-            <a href="/#!/edit/{{shopID}}/" ng-repeat="(i, offer) in offers.slice(offset, offset+limit)" class="flex-column align-items-start list-group-item list-group-item-action">
+            <a href="/#!/offer?action=edit&shopId={{shopID}}&ruleId={{offer.ruleId}}" ng-repeat="(i, offer) in offers.slice(offset, offset+limit)" class="flex-column align-items-start list-group-item list-group-item-action">
                 <div class="w-100 justify-content-between">
                     <span class="badge badge-dark float-left">{{i + offset + 1}}</span>
                     <span class="badge badge-secondary float-right">Target: {{offer.groupId}}</span>
-                    <h5 class="mb-1">&nbsp; List group item heading</h5>
+                    <h4 class="mb-1" ng-class="{'text-danger': offer.ruleId == null}">&nbsp; {{(offer.ruleId == null?'NULL':offer.ruleId)}}</h4>
                 </div>
                 <small class="badge badge-info">{{offer.offerCode}}</small>
                 <p class="mb-1 truncate">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>

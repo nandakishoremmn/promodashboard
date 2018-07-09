@@ -4,7 +4,7 @@
 angular.module('myApp', [
   'ngRoute',
   'myApp.factory',
-  'myApp.create',
+  'myApp.offer',
   'myApp.list',
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

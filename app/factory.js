@@ -3,7 +3,7 @@ angular.module('myApp.factory', [])
         return {
             listOffers: (shop, ...args) => $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/' + shop + (args.length > 0 ? '?' + ['limit=' + args[0], 'offset=' + args[1]].join('&') : '')).then((resp) => (resp.status == 200 ? resp.data : [])),
 
-            fetchData: () => $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/14/10517844464').then((resp) => (resp.status == 200 ? resp.data : [])),
+            fetchOffer: (shop, ruleID) => $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/' + shop + '/' + ruleID).then((resp) => (resp.status == 200 ? resp.data : [])),
 
             fetchOptions: () => $http.get('/static/options.json').then((resp) => (resp.status == 200 ? resp.data : [])),
 

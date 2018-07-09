@@ -39,6 +39,11 @@ angular.module('myApp.list', ['ngRoute', 'myApp.factory'])
 
         }
 
+        $scope.get = (ruleID) => {
+            if(ruleID == undefined) alert("Invalid ruleID.")
+            else api.fetchOffer($scope.shopID, ruleID).then((data) => {console.log(data)})
+        }
+
         $scope.getSummaryText = group => {
             var itemlist = group.items.map(item => item.productName).toString();
             return (itemlist == '' ? "<No Items>" : itemlist);

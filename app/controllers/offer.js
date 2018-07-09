@@ -1,17 +1,59 @@
 'use strict';
 
-angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
+angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
 
     .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/create', {
+        $routeProvider.when('/offer', {
             templateUrl: 'app/views/offer.html',
-            controller: 'CreateCtrl'
+            controller: 'OfferCtrl'
         });
     }])
 
-    .controller('CreateCtrl', ['$scope', '$http', '$timeout', 'api', function ($scope, $http, $timeout, api) {
+    .controller('OfferCtrl', ['$scope', '$http', '$timeout', '$routeParams', 'api', function ($scope, $http, $timeout, $routeParams, api) {
 
         // Todo: breadcrumb notifs
+        console.log($routeParams.action);
+
+        var routeActions = {
+            edit: {
+                value: "edit",
+                title: "Edit Offer"
+            },
+            create: {
+                value: "create",
+                title: "Create Offer"
+            },
+            undefined: {
+                value: "undefined",
+                title: "Invalid Action"
+            }
+        }
+
+        // console.log($routeParams);
+        switch ($routeParams.action) {
+
+            // Create offer
+            case routeActions.create.value:
+                $scope.actionType = routeActions.create;
+                break;
+
+                // Edit Offer
+            case routeActions.edit.value:
+                $scope.actionType = routeActions.edit;
+                $scope.actionType.data = {
+                    shopId: parseInt($routeParams.shopId),
+                    ruleId: parseInt($routeParams.ruleId)
+                };
+                break;
+
+            default:
+                $scope.actionType = routeActions.undefined;
+                $scope.actionType.input = $routeParams.action;
+                break;
+        }
+
+        console.log('Action key: ', $scope.actionType.value)
+
         // Load Options
         api.fetchOptions().then((data) => {
             // $scope.targetGroups = data.targetGroups;
@@ -53,7 +95,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             $scope.offerValue = 20;
             $scope.targetCount = 100;
             $scope.exactOrUpto = true;
-            $scope.targetGroup = {};	
+            $scope.targetGroup = {};
             $scope.activationCode = '';
             $scope.offerTier = 1;
             $scope.maxApplicationLimit = 9999
@@ -76,7 +118,7 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             // Watchers
             $scope.$watchCollection('[startDate, endDate]', () => {
                 $scope.happyHours = $scope.startDate.getHours() + ':' + $scope.startDate.getMinutes() + ':00'
-                    '-' + $scope.endDate.getHours() + ':' + $scope.endDate.getMinutes() + ':00';
+                '-' + $scope.endDate.getHours() + ':' + $scope.endDate.getMinutes() + ':00';
             });
 
             $scope.$watchCollection('[gpOfferType, gpOfferQty]', () => {
@@ -162,9 +204,9 @@ angular.module('myApp.create', ['ngRoute', 'myApp.factory'])
             var finalData = {};
             $scope.paramsFinal.map((param) => {
                 console.log(param);
-                var newParam = ($scope.paramMapping.hasOwnProperty(param) ? $scope.paramMapping[param] : param );
+                var newParam = ($scope.paramMapping.hasOwnProperty(param) ? $scope.paramMapping[param] : param);
                 // $scope.paramMapping.hasOwnProperty(param) && (newParam = $scope.paramMapping[param]);
-                finalData[newParam] = ($scope.$eval(param).hasOwnProperty('value')?$scope.$eval(param)['value']:$scope.$eval(param));
+                finalData[newParam] = ($scope.$eval(param).hasOwnProperty('value') ? $scope.$eval(param)['value'] : $scope.$eval(param));
             });
 
             finalData['preRequisites'] = $scope.groups;
