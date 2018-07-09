@@ -1,15 +1,18 @@
 angular.module('myApp.factory', [])
     .factory('api', ($http) => {
-        return {
-            listOffers: (shop, ...args) => $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/' + shop + (args.length > 0 ? '?' + ['limit=' + args[0], 'offset=' + args[1]].join('&') : '')).then((resp) => (resp.status == 200 ? resp.data : [])),
+        const API_ROUTE = 'https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/';
 
-            fetchOffer: (shop, ruleID) => $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/' + shop + '/' + ruleID).then((resp) => (resp.status == 200 ? resp.data : [])),
+        return {
+            listOffers: (shopID, ...args) => $http.get(API_ROUTE + shopID + (args.length > 0 ? '?' + ['limit=' + args[0], 'offset=' + args[1]].join('&') : '')).then((resp) => (resp.status == 200 ? resp.data : [])),
+
+            // fetchOffer: (shopID, ruleID) => $http.get(API_ROUTE + shopID + '/' + ruleID).then((resp) => (resp.status == 200 ? resp.data : [])),
+            fetchOffer: (shopID, ruleID) => $http.get(API_ROUTE + shopID + '/' + ruleID),
 
             fetchOptions: () => $http.get('/static/options.json').then((resp) => (resp.status == 200 ? resp.data : [])),
 
-            search: (qry) => $http.get('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/14/products/search?q=' + qry).then((resp) => (resp.status == 200 ? resp.data : [])),
+            search: (qry, shopID) => $http.get(API_ROUTE + shopID + '/products/search?q=' + qry).then((resp) => (resp.status == 200 ? resp.data : [])),
 
-            save: (data) => {
+            save: (data, shopID) => {
                 finalData = {
                     "activeDays": "1111111",
                     "additionalField1": null,
@@ -55,9 +58,9 @@ angular.module('myApp.factory', [])
 
                 for (var key in data) finalData[key] = data[key];
 
-                return $http.post('https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/14/', finalData).then((res) => res);
+                return $http.post(API_ROUTE + shopID + '/', finalData).then((res) => res);
 
             },
-            update: (data) => 'e'
+            update: (data, shopID, ruleId) => 'e'
         };
     });
