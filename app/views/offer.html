@@ -60,7 +60,7 @@
                 <div class="form-group col-md-6 col-sm-12 col-lg-4">
                     <label for="offerType">Offer Type:</label>
                     <select class="form-control" id="offerType" ng-options="offerType as offerType.label for offerType in offerTypesOptions"
-                        ng-model="selectedOfferType" ng-disabled="lineSpecOffer">
+                        ng-model="selectedOfferType" ng-disabled="lineSpecFlag">
                     </select>
                 </div>
                 <div class="form-group col-md-6 col-sm-12 col-lg-4">
@@ -94,13 +94,13 @@
                                     </select>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
-                                            <input type="checkbox" ng-model="lineSpecOffer"> &nbsp; Line Spec Offer
+                                            <input type="checkbox" ng-model="lineSpecFlag"> &nbsp; Line Spec Offer
                                         </span>
                                     </div>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Offer Amount</span>
                                     </div>
-                                    <input type="number" name="offerValue" class="form-control" min="0" ng-model="offerValue" ng-disabled="lineSpecOffer">
+                                    <input type="number" name="offerValue" class="form-control" min="0" ng-model="offerValue" ng-disabled="lineSpecFlag">
                                 </div>
                                 <div class="col-sm-12 input-group mb-3">
                                     <div class="input-group-prepend">
@@ -186,12 +186,12 @@
                             <!-- <button class="btn btn-danger" ng-disabled="currGroupIndex < 0" ng-click="deleteGroup()">Delete</button> -->
                         </div>
                         <br>
-                        <!-- <label ng-show="lineSpecOffer"></label> -->
-                        <div class="card" ng-show="lineSpecOffer">
+                        <!-- <label ng-show="lineSpecFlag"></label> -->
+                        <div class="card" ng-show="lineSpecFlag">
                             <div class="card-body">
                                 <h5 class="center">Line Spec Settings</h5>
                                 <div class="row">
-                                    <div class="input-group col-sm-12" ng-show="lineSpecOffer">
+                                    <div class="input-group col-sm-12" ng-show="lineSpecFlag">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Type: </span>
                                         </div>
@@ -203,7 +203,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Amount: </span>
                                         </div>
-                                        <input type="number" id="gpOfferQty" class="form-control" min="1" ng-model="gpOfferQty">
+                                        <input type="number" id="gpOfferValue" class="form-control" min="1" ng-model="gpOfferValue">
                                     </div>
                                 </div>
                             </div>

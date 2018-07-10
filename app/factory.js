@@ -1,16 +1,19 @@
 angular.module('myApp.factory', [])
     .factory('api', ($http) => {
-        const API_ROUTE = 'https://demo-dot-utils-dot-perpule-qa.appspot.com/offers/';
+        const API_ROUTE = 'https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/';
+        var hdr = {
+            headers: {'Authorization': 'Bearer VyEaWG6MAB1Kmz8PPFqNZb6aiXgL3lovZQkPeq8O'}
+        };
 
         return {
-            listOffers: (shopID, ...args) => $http.get(API_ROUTE + shopID + (args.length > 0 ? '?' + ['limit=' + args[0], 'offset=' + args[1]].join('&') : '')).then((resp) => (resp.status == 200 ? resp.data : [])),
+            listOffers: (shopID, ...args) => $http.get(API_ROUTE + shopID + (args.length > 0 ? '?' + ['limit=' + args[0], 'offset=' + args[1]].join('&') : ''), hdr).then((resp) => (resp.status == 200 ? resp.data : [])),
 
             // fetchOffer: (shopID, ruleID) => $http.get(API_ROUTE + shopID + '/' + ruleID).then((resp) => (resp.status == 200 ? resp.data : [])),
-            fetchOffer: (shopID, ruleID) => $http.get(API_ROUTE + shopID + '/' + ruleID),
+            fetchOffer: (shopID, ruleID) => $http.get(API_ROUTE + shopID + '/' + ruleID, hdr),
 
             fetchOptions: () => $http.get('/static/options.json').then((resp) => (resp.status == 200 ? resp.data : [])),
 
-            search: (qry, shopID) => $http.get(API_ROUTE + shopID + '/products/search?q=' + qry).then((resp) => (resp.status == 200 ? resp.data : [])),
+            search: (qry, shopID) => $http.get(API_ROUTE + shopID + '/products/search?q=' + qry, hdr).then((resp) => (resp.status == 200 ? resp.data : [])),
 
             save: (data, shopID) => {
                 finalData = {
@@ -58,7 +61,7 @@ angular.module('myApp.factory', [])
 
                 for (var key in data) finalData[key] = data[key];
 
-                return $http.post(API_ROUTE + shopID + '/', finalData).then((res) => res);
+                return $http.post(API_ROUTE + shopID + '/', finalData, hdr).then((res) => res);
 
             },
             update: (data, shopID, ruleId) => 'e'

@@ -12,6 +12,8 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
     .controller('OfferCtrl', ['$scope', '$http', '$timeout', '$routeParams', 'api', function ($scope, $http, $timeout, $routeParams, api) {
 
         // Todo: breadcrumb notifs
+        // Todo: add <loading> when edit loads
+        // Todo: Happy Hour
         console.log($routeParams.action);
 
         var routeActions = {
@@ -75,14 +77,14 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             .then(() => {
                 // Watchers
                 $scope.$watchCollection('[startDate, endDate]', () => {
-                    $scope.happyHours = $scope.startDate.getHours() + ':' + $scope.startDate.getMinutes() + ':00'
+                    $scope.happyHour = $scope.startDate.getHours() + ':' + $scope.startDate.getMinutes() + ':00' + 
                     '-' + $scope.endDate.getHours() + ':' + $scope.endDate.getMinutes() + ':00';
                 });
 
-                $scope.$watchCollection('[gpOfferType, gpOfferQty]', () => {
+                $scope.$watchCollection('[gpOfferType, gpOfferValue]', () => {
                     if ($scope.currGroupIndex != -1) {
                         $scope.groups[$scope.currGroupIndex].gpOfferType = $scope.gpOfferType;
-                        $scope.groups[$scope.currGroupIndex].gpOfferQty = $scope.gpOfferQty;
+                        $scope.groups[$scope.currGroupIndex].gpOfferValue = $scope.gpOfferValue;
                     }
                 });
 
@@ -109,13 +111,13 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             $scope.selectedTargetGroup = $scope.targetGroupOptions[0];
 
             $scope.gpOfferType = $scope.offerTypesOptions[0];
-            $scope.gpOfferQty = 1
+            $scope.gpOfferValue = 1
 
             // $scope.targetID = data.targetIdCount.split(',')[0];
             // $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
             // $scope.groups = data.preRequisites;
 
-            $scope.lineSpecOffer = false;
+            $scope.lineSpecFlag = false;
             $scope.offerValue = 20;
             $scope.targetCount = 100;
             $scope.exactOrUpto = true;
@@ -156,14 +158,14 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
                     $scope.offerApplicationLogic = $scope.offerApplicationLogicOptions[0];
                     $scope.selectedTargetGroup = $scope.targetGroupOptions[0];
 
-                    $scope.gpOfferType = $scope.offerTypesOptions[0];
-                    $scope.gpOfferQty = 1
+                    $scope.gpOfferType = $scope.offerTypesOptions.filter((option) => option.value == initialData.type)[0];
+                    $scope.gpOfferValue = 1
 
                     // $scope.targetID = data.targetIdCount.split(',')[0];
                     // $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
                     // $scope.groups = data.preRequisites;
 
-                    $scope.lineSpecOffer = false;
+                    $scope.lineSpecFlag = (initialData.lineSpecFlag == 1 ? true : false);
                     $scope.offerValue = 20;
                     $scope.targetCount = 100;
                     $scope.exactOrUpto = true;
@@ -174,6 +176,33 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
 
                     $scope.groups = initialData.preRequisites; //Groups
                     $scope.qty = initialData.preRequisites.map((gp) => gp.quantity); //Array of group quantities, mapped to $scope.groupiems[]
+
+                    $scope.groups.map((group) => {
+                        if ($scope.lineSpecFlag == 1) {
+                            // delete group['gpOfferValue'];
+        
+                            group['gpOfferValue'] = group['offerValue'];
+                            group['gpOfferType'] = group['offerType'];
+
+                            console.log('a');
+                            console.log(group['gpOfferType']);
+                            console.log($scope.offerTypesOptions);
+                            console.log($scope.offerTypesOptions.filter((option) => option.value == group['gpOfferType'])[0]);
+
+                            console.log('b');
+
+                            group['gpOfferType'] = $scope.offerTypesOptions.filter((option) => option.value == group['gpOfferType'])[0];
+                            console.log(group['gpOfferType']);
+
+                            console.log('c');
+
+        
+                            delete group['offerType'];
+                            delete group['offerValue'];
+                        }
+                    });
+        
+
 
                     $scope.currGroupIndex = -1; // Array index of the current selected group(in $scope.groupiems[])
                     $scope.lastGpByLength = $scope.groups.length;
@@ -187,8 +216,10 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
                 })
             }
         };
+        $scope.ruleId = $scope.actionType.data.ruleId;
 
         $scope.paramsFinal = [
+            'ruleId',
             'startDate',
             'endDate',
             'selectedOfferType',
@@ -196,16 +227,16 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             'selectedPrereqType',
             'selectedNormType',
             'selectedTargetGroup',
-            'lineSpecOffer',
+            'lineSpecFlag',
             'offerValue',
             'targetCount',
             'exactOrUpto',
             'targetGroup',
-            'gpOfferQty',
+            'gpOfferValue',
             'gpOfferType',
             'activationCode',
             'maxApplicationLimit',
-            'happyHours',
+            // 'happyHour',
             'offerTier',
             'offerApplicationLogic',
         ]
@@ -257,6 +288,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
         $scope.savedata = () => {
             // var data = $scope.initialData;
             var finalData = {};
+            $scope.lineSpecFlag = $scope.lineSpecFlag ? 1 : 0;
             $scope.paramsFinal.map((param) => {
                 console.log(param);
                 var newParam = ($scope.paramMapping.hasOwnProperty(param) ? $scope.paramMapping[param] : param);
@@ -265,12 +297,18 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             });
 
             finalData['preRequisites'] = $scope.groups;
-            // finalData['preRequisites'].map((group) => {
-            //     if (!$scope.lineSpecOffer) {
-            //         delete group['gpOfferQty'];
-            //         delete group['gpOfferType'];
-            //     }
-            // });
+            finalData['preRequisites'].map((group) => {
+                if ($scope.lineSpecFlag == 1) {
+                    // delete group['gpOfferValue'];
+                    group['gpOfferType'] = group['gpOfferType']['value'];
+
+                    group['offerType'] = group['gpOfferType'];
+                    group['offerValue'] = group['gpOfferValue'];
+
+                    delete group['gpOfferType'];
+                    delete group['gpOfferValue'];
+                }
+            });
 
             // If target group type is same, delete the target group dropdown value
             ($scope.selectedTargetGroup.value == $scope.targetGroupOptions[0].value) && delete finalData['targetGroup']
@@ -280,6 +318,11 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             console.log(finalData);
             api.save(finalData, $scope.actionType.data.shopId).then((res) => {
                 console.log(res);
+
+                $scope.actionType.value == routeActions.edit.value
+                $scope.actionType.title == routeActions.edit.title
+
+                $scope.loadData();
             });
         }
 
@@ -306,9 +349,11 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
         $scope.setGroup = groupIndex => {
             $scope.currGroupIndex = groupIndex;
             $scope.loadGroupItems(groupIndex);
-            // $scope.gpqty = parseInt($scope.groups[$scope.currGroupIndex].quantity);
-            $scope.gpOfferQty = parseInt($scope.groups[$scope.currGroupIndex].gpOfferQty);
-            $scope.gpOfferType = $scope.groups[$scope.currGroupIndex].gpOfferType;
+            $scope.gpqty = parseInt($scope.groups[$scope.currGroupIndex].quantity);
+            // $scope.gpOfferValue = 1;
+            $scope.gpOfferValue = ($scope.lineSpecFlag?parseInt($scope.groups[$scope.currGroupIndex].gpOfferValue):1);
+            // $scope.gpOfferType = $scope.offerTypesOptions[0];
+            $scope.gpOfferType = ($scope.lineSpecFlag?$scope.groups[$scope.currGroupIndex].gpOfferType:$scope.offerTypesOptions[0]);
         }
 
         // Load group items onto the display list
@@ -322,7 +367,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
                 "groupId": $scope.actionType.data.ruleId + String.fromCharCode('a'.charCodeAt() + $scope.lastGpByLength),
                 "quantity": 1, //($scope.currGroupIndex == -1 ? $scope.gpqty : 1),
                 "items": [],
-                "gpOfferQty": ($scope.currGroupIndex == -1 ? $scope.gpOfferQty : 1),
+                "gpOfferValue": ($scope.currGroupIndex == -1 ? $scope.gpOfferValue : 1),
                 "gpOfferType": ($scope.currGroupIndex == -1 ? $scope.gpOfferType : $scope.offerTypesOptions[0]),
             });
             $scope.qty.push(1);
