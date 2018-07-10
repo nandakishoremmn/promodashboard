@@ -34,11 +34,11 @@
     ],
 
     "normTypeOptions": [{
-            "value": "normal",
+            "value": "N",
             "label": "Normal"
         },
         {
-            "value": "normore",
+            "value": "NorMore",
             "label": "NorMore"
         }
     ],

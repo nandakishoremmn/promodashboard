@@ -1,6 +1,6 @@
 angular.module('myApp.factory', [])
     .factory('api', ($http) => {
-        const API_ROUTE = 'https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/';
+        const API_ROUTE = 'https://demo-dot-utils-dot-perpule-qa.appspot.com/offers/';
 
         return {
             listOffers: (shopID, ...args) => $http.get(API_ROUTE + shopID + (args.length > 0 ? '?' + ['limit=' + args[0], 'offset=' + args[1]].join('&') : '')).then((resp) => (resp.status == 200 ? resp.data : [])),

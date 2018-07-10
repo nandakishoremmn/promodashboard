@@ -41,7 +41,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
                 };
                 break;
 
-            // Edit Offer
+                // Edit Offer
             case routeActions.edit.value:
                 $scope.actionType = routeActions.edit;
                 $scope.actionType.data = {
@@ -59,15 +59,37 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
         console.log('Action key: ', $scope.actionType.value)
 
         // Load Options
-        api.fetchOptions().then((data) => {
-            // $scope.targetGroups = data.targetGroups;
-            $scope.offerTypesOptions = data.offerTypesOptions;
-            $scope.appliedOnOptions = data.appliedOnOptions;
-            $scope.prereqTypeOptions = data.prereqTypeOptions;
-            $scope.normTypeOptions = data.normTypeOptions;
-            $scope.targetGroupOptions = data.targetGroupOptions;
-            $scope.offerApplicationLogicOptions = data.offerApplicationLogicOptions;
-        }).then(() => {
+        api.fetchOptions()
+            .then((data) => {
+                // $scope.targetGroups = data.targetGroups;
+                $scope.offerTypesOptions = data.offerTypesOptions;
+                $scope.appliedOnOptions = data.appliedOnOptions;
+                $scope.prereqTypeOptions = data.prereqTypeOptions;
+                $scope.normTypeOptions = data.normTypeOptions;
+                $scope.targetGroupOptions = data.targetGroupOptions;
+                $scope.offerApplicationLogicOptions = data.offerApplicationLogicOptions;
+            })
+            .then(() => {
+                $scope.loadData()
+            })
+            .then(() => {
+                // Watchers
+                $scope.$watchCollection('[startDate, endDate]', () => {
+                    $scope.happyHours = $scope.startDate.getHours() + ':' + $scope.startDate.getMinutes() + ':00'
+                    '-' + $scope.endDate.getHours() + ':' + $scope.endDate.getMinutes() + ':00';
+                });
+
+                $scope.$watchCollection('[gpOfferType, gpOfferQty]', () => {
+                    if ($scope.currGroupIndex != -1) {
+                        $scope.groups[$scope.currGroupIndex].gpOfferType = $scope.gpOfferType;
+                        $scope.groups[$scope.currGroupIndex].gpOfferQty = $scope.gpOfferQty;
+                    }
+                });
+
+                // $scope.$watch('groups', () => {console.log($scope.groups)});
+            });
+
+        $scope.loadData = () => {
             // Initialize
 
             // From ten days later to a month from that
@@ -114,25 +136,59 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             $scope.allowSet = false; //Whether the user is changing the shopId (and ruleId, in case of an edit)
             $scope.invalidFetch = false; //Whether the shopID and ruleID points to an invalid offer
 
-        }).then(() => {
-            // Watchers
-            $scope.$watchCollection('[startDate, endDate]', () => {
-                $scope.happyHours = $scope.startDate.getHours() + ':' + $scope.startDate.getMinutes() + ':00'
-                '-' + $scope.endDate.getHours() + ':' + $scope.endDate.getMinutes() + ':00';
-            });
+            if ($scope.actionType.value == routeActions.edit.value) {
+                api.fetchOffer($scope.actionType.data.shopId, $scope.actionType.data.ruleId).then((data) => {
+                    var initialData = data.data;
 
-            $scope.$watchCollection('[gpOfferType, gpOfferQty]', () => {
-                if ($scope.currGroupIndex != -1) {
-                    $scope.groups[$scope.currGroupIndex].gpOfferType = $scope.gpOfferType;
-                    $scope.groups[$scope.currGroupIndex].gpOfferQty = $scope.gpOfferQty;
-                }
-            });
+                    console.log('Initial Data', initialData);
+                    $scope.startDate = new Date(initialData.startDate);
+                    $scope.endDate = new Date(initialData.endDate);
 
-            // $scope.$watch('groups', () => {console.log($scope.groups)});
-        });
+                    $scope.selectedOfferType = $scope.offerTypesOptions.filter((option) => option.value == initialData.type)[0];
+                    $scope.selectedAppliedOn = $scope.appliedOnOptions.filter((option) => option.value ==  initialData.appliedOn)[0];
+                    $scope.selectedPrereqType = $scope.prereqTypeOptions.filter((option) => option.value ==  initialData.preRequisiteType)[0];
+
+                    // TODO: Map NormType to API 
+                    // $scope.selectedNormType = $scope.normTypeOptions.filter((option) => option.value == initialData.preRequisiteType)[0];
+                    $scope.selectedTargetGroup = {};
+
+                    // $scope.selectedNormType = $scope.normTypeOptions[0];
+                    $scope.offerApplicationLogic = $scope.offerApplicationLogicOptions[0];
+                    $scope.selectedTargetGroup = $scope.targetGroupOptions[0];
+
+                    $scope.gpOfferType = $scope.offerTypesOptions[0];
+                    $scope.gpOfferQty = 1
+
+                    // $scope.targetID = data.targetIdCount.split(',')[0];
+                    // $scope.targetCount = parseInt(data.targetIdCount.split(',')[1]);
+                    // $scope.groups = data.preRequisites;
+
+                    $scope.lineSpecOffer = false;
+                    $scope.offerValue = 20;
+                    $scope.targetCount = 100;
+                    $scope.exactOrUpto = true;
+                    $scope.targetGroup = {};
+                    $scope.activationCode = '';
+                    $scope.offerTier = 1;
+                    $scope.maxApplicationLimit = 9999
+
+                    $scope.groups = initialData.preRequisites; //Groups
+                    $scope.qty = initialData.preRequisites.map((gp) => gp.quantity); //Array of group quantities, mapped to $scope.groupiems[]
+
+                    $scope.currGroupIndex = -1; // Array index of the current selected group(in $scope.groupiems[])
+                    $scope.lastGpByLength = $scope.groups.length;
+                    $scope.groupitems = []; //Group items of the selected group, to be displayed
+                    $scope.searchterm = ""; //Item Search string
+                    $scope.searchRes = [] //Search results
+                    $scope.searchingInProgress = false; //Whether an item search is in progress
+                    $scope.allowSet = false; //Whether the user is changing the shopId (and ruleId, in case of an edit)
+                    $scope.invalidFetch = false; //Whether the shopID and ruleID points to an invalid offer
+
+                })
+            }
+        };
 
         $scope.paramsFinal = [
-            'ruleId',
             'startDate',
             'endDate',
             'selectedOfferType',
