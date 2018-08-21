@@ -200,12 +200,12 @@
                             <span class="input-group-text">Qty: </span>
                         </div>
                         <input type="number" name="gpqty" class="form-control" min="1" ng-model="gpqty" ng-change="setQty()"> -->
-                            <button class="btn btn-success" ng-click="createGroup()">Create</button>
+                            <button class="btn btn-success" ng-click="createGroup()">Add Group</button>
                             <!-- <button class="btn btn-danger" ng-disabled="currGroupIndex < 0" ng-click="deleteGroup()">Delete</button> -->
                         </div>
                         <br>
                         <!-- <label ng-show="lineSpecFlag"></label> -->
-                        <div class="card" ng-show="lineSpecFlag">
+                        <div class="card" ng-show="offer.lineSpecFlag">
                             <div class="card-body">
                                 <h5 class="center">Line Spec Settings</h5>
                                 <div class="row">
@@ -213,8 +213,9 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Type: </span>
                                         </div>
-                                        <select class="form-control" id="gpOfferType" ng-options="offerType as offerType.label for offerType in offerTypesOptions"
-                                            ng-model="gpOfferType">
+                                        <select class="form-control" id="gpOfferType"
+                                            ng-model="currGroup">
+                                            <option ng-value="offerType.value" ng-repeat="offerType in offerTypesOptions">{{ offerType.label }}</option>
                                         </select>
                                         <div class="input-group col-sm-12">
                                         </div>
@@ -304,6 +305,11 @@
         </div>
     </div>
     <br>
+    <div class="row">
+        <div class="col-sm-12">
+            {{ offer | json }}
+        </div>
+    </div>
     <div class="card-footer text-center">
         <div class="btn-group btn-group-lg">
             <button type="button" ng-click="savedata()" class="btn btn-success">Save</button>
