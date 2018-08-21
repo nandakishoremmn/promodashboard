@@ -30,6 +30,10 @@
         {
             "value": "$N",
             "label": "Amount based"
+        },
+        {
+          "value": "NorMore",
+          "label": "Quantity Based (N or more)"
         }
     ],
 
@@ -61,5 +65,15 @@
             "value": "priority",
             "label": "Priority"
         }
+    ],
+
+    "targetCountTypeOptions": [{
+          "value": "upto",
+          "label": "applied on N or less"
+      },
+      {
+          "value": "exact",
+          "label": "applied on exactly N items"
+      }
     ]
 }

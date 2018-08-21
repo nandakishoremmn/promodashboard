@@ -23,14 +23,14 @@ angular.module('myApp.list', ['ngRoute', 'myApp.factory'])
 
         var fetchTimeOut;
 
-        $scope.fetchList = () => {
+        $scope.fetchList = function () {
             if (fetchTimeOut) $timeout.cancel(fetchTimeOut);
 
             $scope.loading = true;
             $scope.offers = [];
-            fetchTimeOut = $timeout(() => {
+            fetchTimeOut = $timeout(function () {
 
-                api.listOffers($scope.shopID).then((data) => {
+                api.listOffers($scope.shopID).then(function(data) {
                     console.log(data);
                     $scope.loading = false;
                     $scope.offers = data;
@@ -39,13 +39,15 @@ angular.module('myApp.list', ['ngRoute', 'myApp.factory'])
 
         }
 
-        $scope.get = (ruleID) => {
+        $scope.get = function (ruleID) {
             if(ruleID == undefined) alert("Invalid ruleID.")
-            else api.fetchOffer($scope.shopID, ruleID).then((data) => {console.log(data)})
+            else api.fetchOffer($scope.shopID, ruleID).then(function(data) {console.log(data)})
         }
 
-        $scope.getSummaryText = group => {
-            var itemlist = group.items.map(item => item.productName).toString();
+        $scope.getSummaryText = function(group) {
+            var itemlist = group.items.map(function(item) {
+                return item.productName;
+            }).toString();
             return (itemlist == '' ? "<No Items>" : itemlist);
         }
 
