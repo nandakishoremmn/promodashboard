@@ -349,7 +349,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             $scope.offer.endDate = moment($scope.offer.endDateTemp).add("330", "minutes");
             $scope.offer.startDate = moment($scope.offer.startDateTemp).add("330", "minutes");
             console.log($scope.offer);
-            api.save($scope.offer, $scope.actionType.data.shopId).then(function(res) {
+            api.save($scope.offer, $scope.offer.shopId).then(function(res) {
                 console.log(res);
                 $scope.offer = res.data;
                 $scope.offer.startDateTemp = moment($scope.offer.startDate).toDate();
