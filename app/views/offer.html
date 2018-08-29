@@ -97,11 +97,18 @@
                                         ng-model="offer.targetGroupOption" ng-disabled="groups.length < 2">
                                         <option ng-value="targetGroupOption.value" ng-repeat="targetGroupOption in targetGroupOptions">{{ targetGroupOption.label }}</option>
                                     </select>
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                            <input type="checkbox" ng-model="offer.lineSpecFlag"> &nbsp; Line Spec Offer
-                                        </span>
+
+                                    <div class="input-group-prepend"
+                                         ng-if="offer.targetGroupOption==targetGroupOptions[1].value"
+                                    >
+                                        <span class="input-group-text">Target Group</span>
                                     </div>
+                                    <select class="form-control" id="targetGroup"
+                                            ng-if="offer.targetGroupOption==targetGroupOptions[1].value"
+                                            ng-model="offer.targetGroup">
+                                         <option ng-value="preRequisite.groupId"
+                                                 ng-repeat="preRequisite in offer.preRequisites">{{ preRequisite.groupId }}</option>
+                                    </select>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
                                             <span ng-if="offer.type != '%off'">Offer Amount</span>
@@ -129,13 +136,10 @@
                                         </select>
                                     </div>
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text">Target Group</span>
+                                        <span class="input-group-text">
+                                            <input type="checkbox" ng-model="offer.lineSpecFlag" ng-enabled="offer.preRequisites.length > 1"> &nbsp; Line Spec Offer
+                                        </span>
                                     </div>
-                                    <select class="form-control" id="targetGroup"
-                                            ng-model="offer.targetGroup">
-                                         <option ng-value="preRequisite.groupId"
-                                                 ng-repeat="preRequisite in offer.preRequisites">{{ preRequisite.groupId }}</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>

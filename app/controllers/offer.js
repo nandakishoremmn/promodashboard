@@ -355,6 +355,9 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
                 $scope.offer.startDateTemp = moment($scope.offer.startDate).toDate();
                 $scope.offer.endDateTemp = moment($scope.offer.endDate).toDate();
                 alert("Saved!")
+            }, function (err) {
+                console.log(err)
+                alert("Some error occurred. Please check and try again");
             });
         };
 
@@ -461,12 +464,13 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
 
         $scope.setParams = function() {
             $scope.invalidFetch = false;
-            api.fetchOffer($scope.actionType.data.shopId, $scope.actionType.data.ruleId).then(function (data) {
-                console.log(data);
-                $scope.allowSet = false;
-            }).catch(function (err) {
-                console.log(err);
-                $scope.invalidFetch = true;
-            })
+            $scope.allowSet = false;
+            // api.fetchOffer($scope.offer.shopId, $scope.actionType.data.ruleId).then(function (data) {
+            //     console.log(data);
+            //     $scope.allowSet = false;
+            // }).catch(function (err) {
+            //     console.log(err);
+            //     $scope.invalidFetch = true;
+            // })
         }
     }]);
