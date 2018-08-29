@@ -453,7 +453,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
                 if (searchTimeOut) $timeout.cancel(searchTimeOut);
                 $scope.searchingInProgress = true;
                 searchTimeOut = $timeout(function () {
-                    api.search($scope.searchterm, $scope.actionType.data.shopId).then(function (data) {
+                    api.search($scope.searchterm, $scope.offer.shopId).then(function (data) {
                         $scope.searchingInProgress = false;
                         $scope.searchRes = data;
                     });
