@@ -43,7 +43,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
                 "ruleId": Math.random().toString(10).substring(11),
                 "ruleIdToTrigger": null,
                 "secondaryOffer": 0,
-                "shopId": 14,
+                "shopId": 999,
                 "startDateTemp":  function () { var d = new Date(); d.setHours(0, 0, 0, 0); return d } (),
                 "targetCount": 1,
                 "targetGroup": "017297505a",
@@ -102,7 +102,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             case routeActions.create.value:
                 $scope.actionType = routeActions.create;
                 $scope.actionType.data = {
-                    shopId: $routeParams.shopID || 14,
+                    shopId: $routeParams.shopID || 999,
                     ruleId: Math.random().toString(10).substring(11)
                 };
                 break;
@@ -111,7 +111,7 @@ angular.module('myApp.offer', ['ngRoute', 'myApp.factory'])
             case routeActions.edit.value:
                 $scope.actionType = routeActions.edit;
                 $scope.actionType.data = {
-                    shopId: $routeParams.shopID || 14,
+                    shopId: $routeParams.shopID || 999,
                     ruleId: $routeParams.ruleID
                 };
                 break;
