@@ -1,7 +1,7 @@
 angular.module('myApp.factory', [])
     .factory('api', function($http) {
         // const API_ROUTE = 'http://localhost:8080/offers/';
-        const API_ROUTE = 'https://nandu-dot-utils-dot-perpule-qa.appspot.com/offers/';
+        const API_ROUTE = 'https://utils-dot-perpule-1248.appspot.com/offers/';
         var hdr = {
             headers: {'Authorization': 'Bearer VyEaWG6MAB1Kmz8PPFqNZb6aiXgL3lovZQkPeq8O'}
         };
